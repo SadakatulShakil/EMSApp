@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "1010350951433",
+    "firebase_url": "https://e-m-s-app.firebaseio.com",
+    "project_id": "e-m-s-app",
+    "storage_bucket": "e-m-s-app.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1010350951433:android:ea0fa07f9bb65846ae7cd8",
+        "android_client_info": {
+          "package_name": "com.example.emsapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1010350951433-cn5tgfp924dukktfkas22f4dequellbc.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBR93SY4_8Lh8TnqdJ7kr7SLhkErbumoic"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1010350951433-cn5tgfp924dukktfkas22f4dequellbc.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
