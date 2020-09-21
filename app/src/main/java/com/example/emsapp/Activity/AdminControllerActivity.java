@@ -1,29 +1,55 @@
 package com.example.emsapp.Activity;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.example.emsapp.Adapter.EmployeeAdapter;
 import com.example.emsapp.MainActivity;
+import com.example.emsapp.Model.Employee;
 import com.example.emsapp.R;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
+import java.util.ArrayList;
 
 public class AdminControllerActivity extends AppCompatActivity {
     private RecyclerView employeeRecyclerView;
     private FloatingActionButton addEmployeeBtn;
     private TextView logOutBtn;
+    private FirebaseUser user;
     private FirebaseAuth firebaseAuth;
+    private ArrayList<Employee> employeeInfoList = new ArrayList<>();
+    private EmployeeAdapter mEmployeeAdapter;
+    private DatabaseReference employeeReference;
+    private ProgressBar progressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_admin_controler);
         iniItView();
+        progressBar.setVisibility(View.VISIBLE);
+        firebaseAuth = FirebaseAuth.getInstance();
+
+        employeeRecyclerView.setLayoutManager(new LinearLayoutManager(AdminControllerActivity.this));
+        mEmployeeAdapter = new EmployeeAdapter(AdminControllerActivity.this, employeeInfoList);
+        employeeRecyclerView.setAdapter(mEmployeeAdapter);
 
         addEmployeeBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -37,9 +63,51 @@ public class AdminControllerActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 finish();
-                firebaseAuth.signOut();
+                firebaseAuth.getInstance().signOut();
                 Intent intent = new Intent(AdminControllerActivity.this, MainActivity.class);
                 startActivity(intent);
+            }
+        });
+
+        getAndShowEmployeeList();
+    }
+
+    private void getAndShowEmployeeList() {
+        user = FirebaseAuth.getInstance().getCurrentUser();
+        String userId = user.getUid();
+        employeeReference = FirebaseDatabase.getInstance().getReference("Employee");
+
+
+        employeeReference.addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+                for (DataSnapshot userSnapshot : snapshot.getChildren()) {
+                    Employee employeeInfo = userSnapshot.getValue(Employee.class);
+
+                    employeeInfoList.add(employeeInfo);
+                }
+                mEmployeeAdapter.notifyDataSetChanged();
+                progressBar.setVisibility(View.GONE);
+            }
+
+            @Override
+            public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+
+            }
+
+            @Override
+            public void onChildRemoved(@NonNull DataSnapshot snapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
             }
         });
     }
@@ -47,7 +115,8 @@ public class AdminControllerActivity extends AppCompatActivity {
     private void iniItView() {
         employeeRecyclerView = findViewById(R.id.recyclerViewForEmployeeList);
         addEmployeeBtn = findViewById(R.id.addEmployeeFAB);
-        logOutBtn = findViewById(R.id.logOutBtn);
+      /*  logOutBtn = findViewById(R.id.logOutBtn);*/
+        progressBar = findViewById(R.id.progressBar);
 
     }
 }

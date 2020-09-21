@@ -32,11 +32,16 @@ public class UserSignInActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_sign_in);
         inItView();
+        firebaseAuth =firebaseAuth.getInstance();
+        firebaseAuth = FirebaseAuth.getInstance();
+
         Intent intent = getIntent();
         type = intent.getStringExtra("user");
+
         if (type.equals("admin")) {
             userType.setText("Admin");
-        } else if (type.equals("admin")) {
+
+        } else if (type.equals("employee")) {
             userType.setText("Employee");
         }
         clickEvents();
@@ -90,6 +95,51 @@ public class UserSignInActivity extends AppCompatActivity {
                 }///viewClick
             });//listenner
         }//if close1
+        else if(type.equals("employee")){
+            signInBt.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                    String email = userEmailEt.getText().toString().trim();
+                    String password = userPasswordEt.getText().toString().trim();
+                    String confirmPassword = confirmPasswordEt.getText().toString().trim();
+
+                    if (email.isEmpty()) {
+                        Toast.makeText(UserSignInActivity.this, "Email is required!", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+                    if (password.isEmpty()) {
+                        Toast.makeText(UserSignInActivity.this, "Password is Required!", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+                    if (confirmPassword.isEmpty()) {
+                        Toast.makeText(UserSignInActivity.this, "Please confirm password!", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+                    if (password.equals(confirmPassword)) {
+                        progressBar.setVisibility(View.VISIBLE);
+
+                        firebaseAuth.signInWithEmailAndPassword(email, password)
+                                .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<AuthResult> task) {
+
+                                        if (task.isSuccessful()) {
+                                            progressBar.setVisibility(View.GONE);
+                                            Intent intent = new Intent(UserSignInActivity.this, UserHomePageActivity.class);
+                                            startActivity(intent);
+                                            finish();
+                                        } else {
+                                            progressBar.setVisibility(View.GONE);
+                                            Toast.makeText(UserSignInActivity.this, task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                                            return;
+                                        }
+                                    }
+                                });///admin condition if close
+                    }//confirm condition if close
+                }///viewClick
+            });
+        }
     }///clickEvents
 
 

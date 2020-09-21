@@ -22,6 +22,7 @@
             android:orientation="vertical">
 
             <TextView
+                android:id="@+id/name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="5dp"
@@ -32,6 +33,7 @@
                 android:textColor="@color/black"/>
 
             <TextView
+                android:id="@+id/department"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Department: Software"
@@ -41,6 +43,7 @@
                 android:textColor="@color/black"/>
 
             <TextView
+                android:id="@+id/designation"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="5dp"
@@ -50,6 +53,7 @@
                 android:textColor="@color/black"/>
 
             <TextView
+                android:id="@+id/phone"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Contact: 01751330394"
