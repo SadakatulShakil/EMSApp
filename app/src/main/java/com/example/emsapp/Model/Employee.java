@@ -19,14 +19,18 @@ public class Employee implements Serializable {
     private String userDesignation;
     private String userJoiningDate;
     private String userPassword;
+    private String userRole;
 
     public Employee() {
     }
 
+
+
     public Employee(String eId, String userName, String userEmail, String userPhone,
                     String userNid, String userCurrentCity, String userCurrentLocation,
                     String userVillage, String userUpazilla, String userZilla, String userDivision,
-                    String userPgId, String userDepartment, String userDesignation, String userJoiningDate, String userPassword) {
+                    String userPgId, String userDepartment, String userDesignation,
+                    String userJoiningDate, String userPassword, String userRole) {
         this.eId = eId;
         this.userName = userName;
         this.userEmail = userEmail;
@@ -42,6 +46,8 @@ public class Employee implements Serializable {
         this.userDepartment = userDepartment;
         this.userDesignation = userDesignation;
         this.userJoiningDate = userJoiningDate;
+        this.userPassword = userPassword;
+        this.userRole = userRole;
     }
 
     public String geteId() {
@@ -170,6 +176,13 @@ public class Employee implements Serializable {
 
     public void setUserPassword(String userPassword) {
         this.userPassword = userPassword;
+    }
+    public String getUserRole() {
+        return userRole;
+    }
+
+    public void setUserRole(String userRole) {
+        this.userRole = userRole;
     }
 
     @Override

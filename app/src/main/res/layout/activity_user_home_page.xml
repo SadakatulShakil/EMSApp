@@ -48,6 +48,18 @@
        app:layout_constraintTop_toBottomOf="@id/toolbar"
         app:srcCompat="@drawable/background" />
 
+    <TextView
+        android:id="@+id/userName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Astronist Shakil"
+        android:layout_margin="5dp"
+        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imageView" />
+
 
     <LinearLayout
     android:id="@+id/eventsItem1"
@@ -58,7 +70,7 @@
     android:orientation="horizontal"
     app:layout_constraintEnd_toEndOf="parent"
     app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintTop_toBottomOf="@+id/imageView">
+    app:layout_constraintTop_toBottomOf="@+id/userName">
 
     <androidx.cardview.widget.CardView
         android:id="@+id/profileInfoLayout"

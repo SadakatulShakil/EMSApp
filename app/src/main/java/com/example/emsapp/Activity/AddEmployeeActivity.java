@@ -23,8 +23,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.emsapp.Adapter.DepartmentAdapter;
+import com.example.emsapp.Adapter.UserRoleAdapter;
 import com.example.emsapp.Model.Department;
 import com.example.emsapp.Model.Employee;
+import com.example.emsapp.Model.UserRole;
 import com.example.emsapp.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -45,11 +47,13 @@ public class AddEmployeeActivity extends AppCompatActivity {
 
     private EditText eName, eEmail, ePhone, eNidNo, eCurrentCity, eCurrentLocation, eVillage, eUpazilla,
             eZilla, eDivision, ePgId, eDesignation, eJoiningDate, ePassword;
-    private Spinner departmentSpinner;
-    private String currentDepartment;
+    private Spinner departmentSpinner, userRoleSpinner;
+    private String currentDepartment, currentUserRole;
     private Button registerBtn;
     private ArrayList<Department> mEmployeeDeptList;
     private DepartmentAdapter mDepartmentAdapter;
+    private ArrayList<UserRole> mUserRoleList;
+    private UserRoleAdapter mUserRoleAdapter;
     protected static TextView viewDate;
     private FirebaseUser user;
     private DatabaseReference employeeReference;
@@ -62,6 +66,7 @@ public class AddEmployeeActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_employee);
         inItDepartmentList();
+        inItUserRoleList();
         inItView();
         final FragmentManager fm = getSupportFragmentManager();
         eJoiningDate.setOnClickListener(new View.OnClickListener() {
@@ -79,6 +84,20 @@ public class AddEmployeeActivity extends AppCompatActivity {
                 registerEmployeeData();
             }
         });
+    }
+
+    private void inItUserRoleList() {
+        mUserRoleList = new ArrayList<>();
+        mUserRoleList.add(new UserRole("Select User Role.."));
+        mUserRoleList.add(new UserRole("Admin"));
+        mUserRoleList.add(new UserRole("Managing Director"));
+        mUserRoleList.add(new UserRole("General Manager"));
+        mUserRoleList.add(new UserRole("Team Coordinator"));
+        mUserRoleList.add(new UserRole("Project Manager"));
+        mUserRoleList.add(new UserRole("General Employee"));
+        mUserRoleList.add(new UserRole("Accounts"));
+        mUserRoleList.add(new UserRole("Service"));
+        mUserRoleList.add(new UserRole("Support"));
     }
 
     private void inItDepartmentList() {
@@ -111,6 +130,7 @@ public class AddEmployeeActivity extends AppCompatActivity {
                 String division = eDivision.getText().toString().trim();
                 String pgId = ePgId.getText().toString().trim();
                 String department = currentDepartment;
+                String userRole = currentUserRole;
                 String designation = eDesignation.getText().toString().trim();
                 String joiningDate = viewDate.getText().toString().trim();
                 String password = ePassword.getText().toString().trim();
@@ -187,9 +207,12 @@ public class AddEmployeeActivity extends AppCompatActivity {
 
         if(currentDepartment.equals("Select Department..")){
             Toast.makeText(AddEmployeeActivity.this, "please select your right Department please", Toast.LENGTH_SHORT).show();
-        }else{
+        }else if(currentUserRole.equals("Select User Role..")){
+            Toast.makeText(AddEmployeeActivity.this, "please select An User Role please", Toast.LENGTH_SHORT).show();
+        }
+        else{
             storeEmployeeData(name, email, phone, nIdNo, currentCity, currentLocation, village,
-                    upazilla, zilla, division, pgId, department, designation, joiningDate, password);
+                    upazilla, zilla, division, pgId, department, designation, joiningDate, password,userRole);
         }
         eName.setText("");
         eEmail.setText("");
@@ -210,19 +233,15 @@ public class AddEmployeeActivity extends AppCompatActivity {
     private void storeEmployeeData(final String name, final String email, final String phone, final String nIdNo,
                                    final String currentCity, final String currentLocation, final String village,
                                    final String upazilla, final String zilla, final String division, final String pgId,
-                                   final String department, final String designation, final String joiningDate, final String password) {
+                                   final String department, final String designation, final String joiningDate,
+                                   final String password, final String userRole) {
 
-        firebaseAuth.createUserWithEmailAndPassword(email, password)
-                .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
 
-                        if (task.isSuccessful()) {
                             String userId = firebaseAuth.getCurrentUser().getUid();
                             employeeReference = FirebaseDatabase.getInstance().getReference().child("Employee").child(department);
                             String pushId = employeeReference.push().getKey();
                             Employee employee = new Employee(pushId, name, email, phone, nIdNo, currentCity, currentLocation,
-                                    village,upazilla, zilla, division, pgId, department, designation, joiningDate, password);
+                                    village,upazilla, zilla, division, pgId, department, designation, joiningDate, password, userRole);
 
                             employeeReference.push().setValue(employee).addOnCompleteListener(new OnCompleteListener<Void>() {
                                 @Override
@@ -246,9 +265,7 @@ public class AddEmployeeActivity extends AppCompatActivity {
                                     Log.d(TAG, "onComplete: "+e.getMessage());
                                 }
                             });
-                        }
-                    }
-                });
+
 
     }
 
@@ -284,6 +301,27 @@ public class AddEmployeeActivity extends AppCompatActivity {
                 currentDepartment = clickedDepartment.getDepartmentName();
 
                 Toast.makeText(AddEmployeeActivity.this, currentDepartment +" is selected !", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
+        userRoleSpinner = findViewById(R.id.userRoleSpinner);
+        mUserRoleAdapter = new UserRoleAdapter(AddEmployeeActivity.this, mUserRoleList);
+
+        userRoleSpinner.setAdapter(mUserRoleAdapter);
+
+        userRoleSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                UserRole clickedUserRole = (UserRole) parent.getItemAtPosition(position);
+
+                currentUserRole = clickedUserRole.getUserRole();
+
+                Toast.makeText(AddEmployeeActivity.this, currentUserRole +" is selected !", Toast.LENGTH_SHORT).show();
             }
 
             @Override

@@ -1,6 +1,7 @@
 package com.example.emsapp.Activity;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
@@ -12,140 +13,121 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.emsapp.Adapter.EmployeeAdapter;
+import com.example.emsapp.Model.Employee;
 import com.example.emsapp.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
+import java.util.ArrayList;
 
 public class UserSignInActivity extends AppCompatActivity {
     private TextView userType;
-    private EditText userEmailEt, userPasswordEt, confirmPasswordEt;
+    private EditText userNameEt, userPasswordEt, confirmPasswordEt;
     private Button signInBt;
     private ProgressBar progressBar;
-    private String type;
+    private String userRole;
+    private FirebaseUser user;
+    private ArrayList<Employee> employeeInfoList = new ArrayList<>();
+    private DatabaseReference employeeReference;
     private FirebaseAuth firebaseAuth;
+    private String uName, uPassword, confirmPassword;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_sign_in);
         inItView();
-        firebaseAuth =firebaseAuth.getInstance();
-        firebaseAuth = FirebaseAuth.getInstance();
+        firebaseAuth = firebaseAuth.getInstance();
 
         Intent intent = getIntent();
-        type = intent.getStringExtra("user");
+        userRole = intent.getStringExtra("userRole");
 
-        if (type.equals("admin")) {
-            userType.setText("Admin");
-
-        } else if (type.equals("employee")) {
-            userType.setText("Employee");
-        }
+        userType.setText("Hello ! " + userRole);
         clickEvents();
     }
 
     private void clickEvents() {
-        if (type.equals("admin")) {
-            signInBt.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
 
-                    String email = userEmailEt.getText().toString().trim();
-                    String password = userPasswordEt.getText().toString().trim();
-                    String confirmPassword = confirmPasswordEt.getText().toString().trim();
+        signInBt.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                progressBar.setVisibility(View.VISIBLE);
+                uName = userNameEt.getText().toString().trim();
+                uPassword = userPasswordEt.getText().toString().trim();
+                confirmPassword = confirmPasswordEt.getText().toString().trim();
 
-                    if (email.isEmpty()) {
-                        Toast.makeText(UserSignInActivity.this, "Email is required!", Toast.LENGTH_SHORT).show();
-                        return;
-                    }
-                    if (password.isEmpty()) {
-                        Toast.makeText(UserSignInActivity.this, "Password is Required!", Toast.LENGTH_SHORT).show();
-                        return;
-                    }
-                    if (confirmPassword.isEmpty()) {
-                        Toast.makeText(UserSignInActivity.this, "Please confirm password!", Toast.LENGTH_SHORT).show();
-                        return;
-                    }
-                    if (password.equals(confirmPassword)) {
-                        progressBar.setVisibility(View.VISIBLE);
+                if (uPassword.equals(confirmPassword)) {
+                    if (uName.equals("Admin") && uPassword.equals("123321")) {
+                        progressBar.setVisibility(View.GONE);
+                        Intent intent = new Intent(UserSignInActivity.this, AdminControllerActivity.class);
+                        startActivity(intent);
+                        finish();
+                    } else {
 
-                        if(email.equalsIgnoreCase("admin@gmail.com")){
-                            firebaseAuth.signInWithEmailAndPassword(email,password)
-                                    .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                                        @Override
-                                        public void onComplete(@NonNull Task<AuthResult> task) {
-                                            progressBar.setVisibility(View.GONE);
-                                            if(task.isSuccessful()){
-                                                finish();
-                                                Intent intent = new Intent(UserSignInActivity.this, AdminControllerActivity.class);
-                                                startActivity(intent);
-                                            }
-                                        }
-                                    }).addOnFailureListener(new OnFailureListener() {
-                                @Override
-                                public void onFailure(@NonNull Exception e) {
-                                    Toast.makeText(UserSignInActivity.this, e.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
-                                }
-                            });
-                        }///admin condition if close
-                    }//confirm condition if close
-                }///viewClick
-            });//listenner
-        }//if close1
-        else if(type.equals("employee")){
-            signInBt.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
+                        user = FirebaseAuth.getInstance().getCurrentUser();
+                        String userId = user.getUid();
+                        employeeReference = FirebaseDatabase.getInstance().getReference("Employee");
 
-                    String email = userEmailEt.getText().toString().trim();
-                    String password = userPasswordEt.getText().toString().trim();
-                    String confirmPassword = confirmPasswordEt.getText().toString().trim();
 
-                    if (email.isEmpty()) {
-                        Toast.makeText(UserSignInActivity.this, "Email is required!", Toast.LENGTH_SHORT).show();
-                        return;
-                    }
-                    if (password.isEmpty()) {
-                        Toast.makeText(UserSignInActivity.this, "Password is Required!", Toast.LENGTH_SHORT).show();
-                        return;
-                    }
-                    if (confirmPassword.isEmpty()) {
-                        Toast.makeText(UserSignInActivity.this, "Please confirm password!", Toast.LENGTH_SHORT).show();
-                        return;
-                    }
-                    if (password.equals(confirmPassword)) {
-                        progressBar.setVisibility(View.VISIBLE);
-
-                        firebaseAuth.signInWithEmailAndPassword(email, password)
-                                .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                                    @Override
-                                    public void onComplete(@NonNull Task<AuthResult> task) {
-
-                                        if (task.isSuccessful()) {
-                                            progressBar.setVisibility(View.GONE);
-                                            Intent intent = new Intent(UserSignInActivity.this, UserHomePageActivity.class);
-                                            startActivity(intent);
-                                            finish();
-                                        } else {
-                                            progressBar.setVisibility(View.GONE);
-                                            Toast.makeText(UserSignInActivity.this, task.getException().getMessage(), Toast.LENGTH_SHORT).show();
-                                            return;
-                                        }
+                        employeeReference.addChildEventListener(new ChildEventListener() {
+                            @Override
+                            public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+                                for (DataSnapshot userSnapshot : snapshot.getChildren()) {
+                                    Employee employeeInfo = userSnapshot.getValue(Employee.class);
+                                    if (employeeInfo.getUserPgId().equals(uName)
+                                            && employeeInfo.getUserPassword().equals(uPassword)) {
+                                        progressBar.setVisibility(View.GONE);
+                                        Intent intent = new Intent(UserSignInActivity.this, UserHomePageActivity.class);
+                                        intent.putExtra("userName", uName);
+                                        startActivity(intent);
+                                        finish();
                                     }
-                                });///admin condition if close
-                    }//confirm condition if close
-                }///viewClick
-            });
-        }
+
+                                }
+
+                            }
+
+                            @Override
+                            public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+
+                            }
+
+                            @Override
+                            public void onChildRemoved(@NonNull DataSnapshot snapshot) {
+
+                            }
+
+                            @Override
+                            public void onChildMoved(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError error) {
+
+                            }
+                        });
+                    }
+                }
+            }
+        });
+
     }///clickEvents
 
 
     private void inItView() {
         userType = findViewById(R.id.demoUser);
-        userEmailEt = findViewById(R.id.etUserEmail);
+        userNameEt = findViewById(R.id.etUserName);
         userPasswordEt = findViewById(R.id.etUserPassword);
         confirmPasswordEt = findViewById(R.id.etConfirmPassword);
         signInBt = findViewById(R.id.btnSignIn);

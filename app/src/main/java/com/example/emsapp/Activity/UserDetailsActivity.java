@@ -1,13 +1,9 @@
 package com.example.emsapp.Activity;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
-import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -17,16 +13,11 @@ import com.example.emsapp.R;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.ChildEventListener;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
 
-public class EmployeeDetailsActivity extends AppCompatActivity {
-
+public class UserDetailsActivity extends AppCompatActivity {
     private TextView eName, eEmail, ePhone, eNidNo, eCurrentCity,
             eCurrentLocation, eVillage, eUpazilla, eZilla,
             eDivision, ePgId, eDesignation, eJoiningDate, eDepartment, userDeleteBtn;
@@ -38,18 +29,14 @@ public class EmployeeDetailsActivity extends AppCompatActivity {
     private ProgressBar progressBar;
     private FloatingActionButton updateUserInfo;
     private Employee employee;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_employee_details);
+        setContentView(R.layout.activity_user_details);
+
         inItView();
         Intent intent = getIntent();
-        employee = (Employee) intent.getSerializableExtra("employeeInfo");
-       /* String currentEmail = employee.getUserEmail();
-        if(!(currentEmail.equals("admin@gmail.com"))){
-            userDeleteBtn.setVisibility(View.GONE);
-        }*/
+        employee = (Employee) intent.getSerializableExtra("userInfo");
 
         eName.setText("Name: "+employee.getUserName());
         eEmail.setText("Email: "+employee.getUserEmail());
@@ -65,10 +52,7 @@ public class EmployeeDetailsActivity extends AppCompatActivity {
         eDesignation.setText("Designation: "+employee.getUserDesignation());
         eJoiningDate.setText("Joining Date: "+employee.getUserJoiningDate());
         eDepartment.setText("Department: "+employee.getUserDepartment());
-
-
     }
-
 
     private void inItView() {
         firebaseAuth = FirebaseAuth.getInstance();
@@ -89,5 +73,6 @@ public class EmployeeDetailsActivity extends AppCompatActivity {
         updateUserInfo = findViewById(R.id.updateFAB);
         //progressBar = findViewById(R.id.progressBar);
         eDepartment = findViewById(R.id.department);
+
     }
 }

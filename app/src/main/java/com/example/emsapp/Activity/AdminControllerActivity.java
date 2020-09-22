@@ -59,7 +59,7 @@ public class AdminControllerActivity extends AppCompatActivity {
             }
         });
 
-        logOutBtn.setOnClickListener(new View.OnClickListener() {
+       /* logOutBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 finish();
@@ -67,7 +67,7 @@ public class AdminControllerActivity extends AppCompatActivity {
                 Intent intent = new Intent(AdminControllerActivity.this, MainActivity.class);
                 startActivity(intent);
             }
-        });
+        });*/
 
         getAndShowEmployeeList();
     }

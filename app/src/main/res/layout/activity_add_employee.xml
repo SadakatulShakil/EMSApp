@@ -304,6 +304,34 @@
                     tools:ignore="HardcodedText"
                     tools:targetApi="LOLLIPOP" />
 
+                <TextView
+                    android:id="@+id/demo2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="8dp"
+                    android:text="User Role :"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                    android:textColor="@color/black"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/departmentSpinner" />
+
+
+                <Spinner
+                    android:id="@+id/userRoleSpinner"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginRight="16dp"
+                    android:layout_marginBottom="16dp"
+                    android:overlapAnchor="false"
+                    android:spinnerMode="dropdown"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/demo2"
+                    tools:ignore="HardcodedText"
+                    tools:targetApi="LOLLIPOP" />
+
                 <EditText
                     android:id="@+id/employeeDesignationEt"
                     android:layout_width="match_parent"
@@ -317,7 +345,7 @@
                     android:padding="12dp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/departmentSpinner" />
+                    app:layout_constraintTop_toBottomOf="@+id/userRoleSpinner" />
 
                 <EditText
                     android:id="@+id/startDateET"
@@ -341,7 +369,7 @@
                     android:layout_margin="16dp"
                     android:hint="user login password"
                     android:imeOptions="actionDone"
-                    android:inputType="textPassword"
+                    android:inputType="text"
                     android:padding="15dp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
