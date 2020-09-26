@@ -349,7 +349,7 @@
     </LinearLayout>
 
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
+   <!-- <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/updateFAB"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -360,5 +360,5 @@
         android:elevation="10dp"
         android:src="@drawable/ic_edit"
         tools:targetApi="lollipop" />
-
+-->
 </RelativeLayout>

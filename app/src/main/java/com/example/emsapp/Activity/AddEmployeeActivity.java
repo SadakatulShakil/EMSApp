@@ -237,7 +237,7 @@ public class AddEmployeeActivity extends AppCompatActivity {
                                    final String password, final String userRole) {
 
 
-                            String userId = firebaseAuth.getCurrentUser().getUid();
+
                             employeeReference = FirebaseDatabase.getInstance().getReference().child("Employee").child(department);
                             String pushId = employeeReference.push().getKey();
                             Employee employee = new Employee(pushId, name, email, phone, nIdNo, currentCity, currentLocation,

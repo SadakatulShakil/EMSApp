@@ -36,10 +36,8 @@ public class UserSignInActivity extends AppCompatActivity {
     private Button signInBt;
     private ProgressBar progressBar;
     private String userRole;
-    private FirebaseUser user;
     private ArrayList<Employee> employeeInfoList = new ArrayList<>();
     private DatabaseReference employeeReference;
-    private FirebaseAuth firebaseAuth;
     private String uName, uPassword, confirmPassword;
 
     @Override
@@ -47,7 +45,6 @@ public class UserSignInActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_sign_in);
         inItView();
-        firebaseAuth = firebaseAuth.getInstance();
 
         Intent intent = getIntent();
         userRole = intent.getStringExtra("userRole");
@@ -74,8 +71,7 @@ public class UserSignInActivity extends AppCompatActivity {
                         finish();
                     } else {
 
-                        user = FirebaseAuth.getInstance().getCurrentUser();
-                        String userId = user.getUid();
+
                         employeeReference = FirebaseDatabase.getInstance().getReference("Employee");
 
 

@@ -25,9 +25,7 @@ import java.util.ArrayList;
 
 public class UserHomePageActivity extends AppCompatActivity {
 
-    private CardView profileInfo;
-    private FirebaseUser user;
-    private FirebaseAuth firebaseAuth;
+    private CardView profileInfo, checkInOut, movableReport, equipment, dailyReport, Convenience;
     private TextView userOriginalName;
     private String userName;
     private DatabaseReference employeeReference;
@@ -39,7 +37,6 @@ public class UserHomePageActivity extends AppCompatActivity {
         setContentView(R.layout.activity_user_home_page);
 
         inItView();
-        firebaseAuth = FirebaseAuth.getInstance();
         Intent intent = getIntent();
         userName = intent.getStringExtra("userName");
         getAuthUserData();
@@ -47,10 +44,8 @@ public class UserHomePageActivity extends AppCompatActivity {
     }
 
     private void getAuthUserData() {
-        user = FirebaseAuth.getInstance().getCurrentUser();
-        String userId = user.getUid();
-        employeeReference = FirebaseDatabase.getInstance().getReference("Employee");
 
+        employeeReference = FirebaseDatabase.getInstance().getReference("Employee");
 
         employeeReference.addChildEventListener(new ChildEventListener() {
             @Override
@@ -61,7 +56,8 @@ public class UserHomePageActivity extends AppCompatActivity {
                     if(employeeInfo.getUserPgId().equals(userName)){
                         userOriginalName.setText("Hello! "+ employeeInfo.getUserName());
 
-                        GoForDetalis(employeeInfo);
+                        GoForDetails(employeeInfo);
+                        GoForCheckInOutInfo(employeeInfo);
                     }
                 }
             }
@@ -89,7 +85,7 @@ public class UserHomePageActivity extends AppCompatActivity {
 
     }
 
-    private void GoForDetalis(final Employee employeeInfo) {
+    private void GoForDetails(final Employee employeeInfo) {
         profileInfo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -100,8 +96,30 @@ public class UserHomePageActivity extends AppCompatActivity {
         });
     }
 
+    private void GoForCheckInOutInfo(final Employee employeeInfo) {
+        checkInOut.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(UserHomePageActivity.this, OfficeInAndOutActivity.class);
+                intent.putExtra("userInfo", employeeInfo);
+                startActivity(intent);
+            }
+        });
+
+        movableReport.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(UserHomePageActivity.this, MoveableReportActivity.class);
+                intent.putExtra("userInfo", employeeInfo);
+                startActivity(intent);
+            }
+        });
+    }
+
     private void inItView() {
         profileInfo = findViewById(R.id.profileInfoLayout);
+        checkInOut = findViewById(R.id.checkInOutLayout);
+        movableReport = findViewById(R.id.movableLayout);
         userOriginalName = findViewById(R.id.userName);
     }
 }

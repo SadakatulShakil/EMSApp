@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -35,7 +36,7 @@ public class UserDetailsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_user_details);
 
         inItView();
-        Intent intent = getIntent();
+        final Intent intent = getIntent();
         employee = (Employee) intent.getSerializableExtra("userInfo");
 
         eName.setText("Name: "+employee.getUserName());
@@ -52,6 +53,15 @@ public class UserDetailsActivity extends AppCompatActivity {
         eDesignation.setText("Designation: "+employee.getUserDesignation());
         eJoiningDate.setText("Joining Date: "+employee.getUserJoiningDate());
         eDepartment.setText("Department: "+employee.getUserDepartment());
+
+        updateUserInfo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent1 = new Intent(UserDetailsActivity.this, UpdateUserInfoActivity.class);
+                intent1.putExtra("userInfo", employee);
+                startActivity(intent1);
+            }
+        });
     }
 
     private void inItView() {

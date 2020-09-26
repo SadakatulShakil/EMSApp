@@ -74,7 +74,6 @@ public class AdminControllerActivity extends AppCompatActivity {
 
     private void getAndShowEmployeeList() {
         user = FirebaseAuth.getInstance().getCurrentUser();
-        String userId = user.getUid();
         employeeReference = FirebaseDatabase.getInstance().getReference("Employee");
 
 
