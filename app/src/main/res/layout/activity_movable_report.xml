@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Activity.MoveableReportActivity">
+    tools:context=".Activity.MovableReportActivity">
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
@@ -44,11 +44,9 @@
         android:layout_height="wrap_content"
         android:layout_margin="8dp"
         android:text="Movement Start"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/toolbar"
-        app:layout_constraintVertical_bias="0.25" />
+        app:layout_constraintTop_toBottomOf="@+id/reasonTextEt" />
 
     <LinearLayout
         android:id="@+id/startDetailsLayout"
@@ -81,7 +79,14 @@
             android:textColor="@color/black"
             android:textStyle="bold" />
 
-
+        <TextView
+            android:id="@+id/reasonTv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:text="Head quarter for comboId"
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+            android:textColor="@color/black"
+            android:textStyle="bold" />
 
     </LinearLayout>
 
@@ -90,12 +95,15 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="8dp"
+        android:layout_marginTop="80dp"
         android:gravity="center"
         android:hint="What is your reason for movement?"
         android:textColor="@color/black"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/startDetailsLayout" />
+        app:layout_constraintTop_toBottomOf="@+id/toolbar"
+        app:layout_constraintVertical_bias="0.1" />
 
     <Button
         android:id="@+id/endBtn"
@@ -105,7 +113,7 @@
         android:layout_margin="8dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/reasonTextEt" />
+        app:layout_constraintTop_toBottomOf="@+id/startDetailsLayout" />
 
     <LinearLayout
         android:id="@+id/endDetailsLayout"

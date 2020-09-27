@@ -16,6 +16,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -37,35 +38,42 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
 
-public class OfficeInAndOutActivity extends AppCompatActivity {
-
-    private Button startOfficeBtn, finishOfficeBtn;
+public class MovableReportActivity extends AppCompatActivity {
+    private EditText reasonTextEt;
+    private Button startOffice, finishOffice;
     private LinearLayout startInformation, finishInformation;
-    private TextView startTime, startLocation, finishTime, finishLocation;
+    private TextView startTime, startLocation, finishTime, finishLocation, reason;
     private  String addingTimeForStart, addingTimeForFinish,
-            addingDate, addressForStart, addressForFinish,addressStart, addressFinish, monthName, pushId;
+            addingDate, addressForStart, addressForFinish,addressStart, addressFinish, monthName, moveReason,pushId;
     private FusedLocationProviderClient client;
     private Geocoder geocoder;
     private Employee employee;
     private List<Address> addresses;
     public static final String TAG =  "InOut";
-    private DatabaseReference attendanceReference;
-
+    private DatabaseReference movableReportReference;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_office_in_and_out);
+        setContentView(R.layout.activity_movable_report);
         inItView();
         Intent intent = getIntent();
         employee = (Employee) intent.getSerializableExtra("userInfo");
 
-        startOfficeBtn.setOnClickListener(new View.OnClickListener() {
+        startOffice.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 startInformation.setVisibility(View.VISIBLE);
+                moveReason = reasonTextEt.getText().toString().trim();
+                if (moveReason.isEmpty()) {
+                    reasonTextEt.setError("Reason is required!");
+                    reasonTextEt.requestFocus();
+                    return;
+                }
+                reason.setText(moveReason);
+                reasonTextEt.setText("");
                 ///Current Time///
                 Calendar calendar = Calendar.getInstance();
-                SimpleDateFormat myTimeFormat = new SimpleDateFormat("hh:mm a",Locale.US);
+                SimpleDateFormat myTimeFormat = new SimpleDateFormat("hh:mm a", Locale.US);
                 addingTimeForStart = myTimeFormat.format(calendar.getTime());
                 SimpleDateFormat myDateFormat = new SimpleDateFormat("dd-MM-yyyy",Locale.US);
                 addingDate = myDateFormat.format(calendar.getTime());
@@ -74,16 +82,16 @@ public class OfficeInAndOutActivity extends AppCompatActivity {
                 final String monthName = calendar.getDisplayName(Calendar.MONTH, Calendar.LONG, Locale.US);
                 Log.d(TAG, "onClick: " + monthName);
                 ///current Location////
-                geocoder= new Geocoder(OfficeInAndOutActivity.this, Locale.getDefault());
-                client = LocationServices.getFusedLocationProviderClient(OfficeInAndOutActivity.this);
+                geocoder= new Geocoder(MovableReportActivity.this, Locale.getDefault());
+                client = LocationServices.getFusedLocationProviderClient(MovableReportActivity.this);
                 requestPermission();
 
-                if(ActivityCompat.checkSelfPermission(OfficeInAndOutActivity.this, Manifest.permission.ACCESS_FINE_LOCATION)
+                if(ActivityCompat.checkSelfPermission(MovableReportActivity.this, Manifest.permission.ACCESS_FINE_LOCATION)
                         != PackageManager.PERMISSION_GRANTED){
                     return;
                 }
 
-                client.getLastLocation().addOnSuccessListener((Activity) OfficeInAndOutActivity.this, new OnSuccessListener<Location>() {
+                client.getLastLocation().addOnSuccessListener((Activity) MovableReportActivity.this, new OnSuccessListener<Location>() {
                     @Override
                     public void onSuccess(Location location) {
 
@@ -103,7 +111,7 @@ public class OfficeInAndOutActivity extends AppCompatActivity {
                                 startLocation.setText(addressStart);
 
                                 Log.d(TAG, "onSuccessLocation : " + addressForStart);
-                                storeStartStatus(addressStart, monthName);
+                                storeStartMoveStatus(addressStart, monthName, moveReason);
 
 
                             } catch (IOException e) {
@@ -126,7 +134,7 @@ public class OfficeInAndOutActivity extends AppCompatActivity {
             }
         });
 
-        finishOfficeBtn.setOnClickListener(new View.OnClickListener() {
+        finishOffice.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 finishInformation.setVisibility(View.VISIBLE);
@@ -140,16 +148,16 @@ public class OfficeInAndOutActivity extends AppCompatActivity {
                 ///Current Time//////
                 monthName = calendar.getDisplayName(Calendar.MONTH, Calendar.LONG, Locale.US);
                 ///current Location////
-                geocoder= new Geocoder(OfficeInAndOutActivity.this, Locale.getDefault());
-                client = LocationServices.getFusedLocationProviderClient(OfficeInAndOutActivity.this);
+                geocoder= new Geocoder(MovableReportActivity.this, Locale.getDefault());
+                client = LocationServices.getFusedLocationProviderClient(MovableReportActivity.this);
                 requestPermission();
 
-                if(ActivityCompat.checkSelfPermission(OfficeInAndOutActivity.this, Manifest.permission.ACCESS_FINE_LOCATION)
+                if(ActivityCompat.checkSelfPermission(MovableReportActivity.this, Manifest.permission.ACCESS_FINE_LOCATION)
                         != PackageManager.PERMISSION_GRANTED){
                     return;
                 }
 
-                client.getLastLocation().addOnSuccessListener((Activity) OfficeInAndOutActivity.this, new OnSuccessListener<Location>() {
+                client.getLastLocation().addOnSuccessListener((Activity) MovableReportActivity.this, new OnSuccessListener<Location>() {
                     @Override
                     public void onSuccess(Location location) {
 
@@ -169,7 +177,7 @@ public class OfficeInAndOutActivity extends AppCompatActivity {
                                 finishLocation.setText(addressFinish);
 
                                 Log.d(TAG, "onSuccessLocation : " + addressForFinish);
-                                storeFinishStatus(addressFinish, monthName);
+                                storeFinishMoveStatus(addressFinish, monthName);
 
 
                             } catch (IOException e) {
@@ -190,59 +198,56 @@ public class OfficeInAndOutActivity extends AppCompatActivity {
 
             }
         });
-
     }
 
-    private void storeStartStatus(String addressStart, String monthName) {
-        attendanceReference = FirebaseDatabase.getInstance().getReference("Attendance")
+    private void storeStartMoveStatus(String addressStart, String monthName, String moveReason) {
+        movableReportReference = FirebaseDatabase.getInstance().getReference("MovableReport")
                 .child(monthName);
 
-        Attendance attendanceInfo = new Attendance(
+        Attendance movableInfo = new Attendance(
                 employee.getUserPgId(),
                 addingDate,
                 addingTimeForStart,
-                addressStart
+                addressStart,
+                moveReason
         );
-        pushId = attendanceReference.push().getKey();
-        attendanceReference.child(pushId).setValue(attendanceInfo).addOnCompleteListener(new OnCompleteListener<Void>() {
+        pushId = movableReportReference.push().getKey();
+        movableReportReference.child(pushId).setValue(movableInfo).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
                 if(task.isSuccessful()){
-                    startOfficeBtn.setClickable(false);
-                    Toast.makeText(OfficeInAndOutActivity.this, "Your Office Start Information Updated !", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MovableReportActivity.this, "Your Office Start Information Updated !", Toast.LENGTH_SHORT).show();
                 }
                 else{
-                    startOfficeBtn.setClickable(true);
-                    Toast.makeText(OfficeInAndOutActivity.this, task.getException().getMessage(), Toast.LENGTH_LONG).show();
+                    Toast.makeText(MovableReportActivity.this, task.getException().getMessage(), Toast.LENGTH_LONG).show();
                 }
 
             }
         });
     }
 
-    private void storeFinishStatus(String addressStart, String monthName) {
-        attendanceReference = FirebaseDatabase.getInstance().getReference("Attendance")
+    private void storeFinishMoveStatus(String addressStart, String monthName) {
+        movableReportReference = FirebaseDatabase.getInstance().getReference("MovableReport")
                 .child(monthName);
 
-        Attendance attendanceInfo = new Attendance(
+        Attendance movableInfo = new Attendance(
                 employee.getUserPgId(),
                 addingDate,
                 startTime.getText().toString().trim(),
                 startLocation.getText().toString().trim(),
                 addingTimeForFinish,
-                addressStart
+                addressStart,
+                reason.getText().toString().trim()
         );
 
-        attendanceReference.child(pushId).setValue(attendanceInfo).addOnCompleteListener(new OnCompleteListener<Void>() {
+        movableReportReference.child(pushId).setValue(movableInfo).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
                 if(task.isSuccessful()){
-                    finishOfficeBtn.setClickable(false);
-                    Toast.makeText(OfficeInAndOutActivity.this, "Your Office Finishing Information Updated !", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MovableReportActivity.this, "Your Office Finishing Information Updated !", Toast.LENGTH_SHORT).show();
                 }
                 else{
-                    finishOfficeBtn.setClickable(true);
-                    Toast.makeText(OfficeInAndOutActivity.this, task.getException().getMessage(), Toast.LENGTH_LONG).show();
+                    Toast.makeText(MovableReportActivity.this, task.getException().getMessage(), Toast.LENGTH_LONG).show();
                 }
 
             }
@@ -261,13 +266,15 @@ public class OfficeInAndOutActivity extends AppCompatActivity {
 
     private void inItView() {
 
-        startOfficeBtn = findViewById(R.id.startBtn);
-        finishOfficeBtn = findViewById(R.id.endBtn);
+        startOffice = findViewById(R.id.startBtn);
+        finishOffice = findViewById(R.id.endBtn);
         startInformation = findViewById(R.id.startDetailsLayout);
         finishInformation = findViewById(R.id.endDetailsLayout);
         startTime = findViewById(R.id.startTimeTv);
         startLocation = findViewById(R.id.startLocationTv);
         finishTime = findViewById(R.id.endTimeTv);
         finishLocation = findViewById(R.id.endLocationTv);
+        reasonTextEt = findViewById(R.id.reasonTextEt);
+        reason = findViewById(R.id.reasonTv);
     }
 }

@@ -218,7 +218,7 @@
         </androidx.cardview.widget.CardView>
 
         <androidx.cardview.widget.CardView
-            android:id="@+id/onGoingEventsLayout"
+            android:id="@+id/checkAttendanceLayout"
             android:layout_width="100dp"
             android:layout_height="100dp"
             android:layout_margin="8dp"
@@ -242,7 +242,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="2dp"
-                    android:text="Daily Report"
+                    android:text="Attendance"
                     android:textColor="@color/black"
                     android:textStyle="bold" />
 
@@ -251,7 +251,7 @@
         </androidx.cardview.widget.CardView>
 
         <androidx.cardview.widget.CardView
-            android:id="@+id/expenseOfEventsLayout"
+            android:id="@+id/movementCheckLayout"
             android:layout_width="100dp"
             android:layout_height="100dp"
             android:layout_margin="8dp"
@@ -275,7 +275,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="2dp"
-                    android:text="Equipment"
+                    android:text="Movement"
                     android:textColor="@color/black"
                     android:textStyle="bold" />
 

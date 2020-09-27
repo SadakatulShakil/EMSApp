@@ -7,6 +7,7 @@ public class Attendance {
     private String startLocation;
     private String finishTime;
     private String finishLocation;
+    private String movementReason;
 
     public Attendance() {
     }
@@ -35,9 +36,32 @@ public class Attendance {
         this.finishLocation = finishLocation;
     }
 
-    public Attendance(String finishTime, String finishLocation) {
+    public Attendance(String pgId,
+                      String date,
+                      String startTime,
+                      String startLocation,
+                      String movementReason) {
+        this.pgId = pgId;
+        this.date = date;
+        this.startTime = startTime;
+        this.startLocation = startLocation;
+        this.movementReason = movementReason;
+    }
+
+    public Attendance(String pgId,
+                      String date,
+                      String startTime,
+                      String startLocation,
+                      String finishTime,
+                      String finishLocation,
+                      String movementReason) {
+        this.pgId = pgId;
+        this.date = date;
+        this.startTime = startTime;
+        this.startLocation = startLocation;
         this.finishTime = finishTime;
         this.finishLocation = finishLocation;
+        this.movementReason = movementReason;
     }
 
     public String getPgId() {
@@ -86,5 +110,13 @@ public class Attendance {
 
     public void setFinishLocation(String finishLocation) {
         this.finishLocation = finishLocation;
+    }
+
+    public String getMovementReason() {
+        return movementReason;
+    }
+
+    public void setMovementReason(String movementReason) {
+        this.movementReason = movementReason;
     }
 }

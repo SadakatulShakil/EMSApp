@@ -17,7 +17,8 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true"
         tools:targetApi="m">
-        <activity android:name=".Activity.MoveableReportActivity"></activity>
+        <activity android:name=".Activity.CheckAttendanceActivity"></activity>
+        <activity android:name=".Activity.MovableReportActivity" />
         <activity android:name=".Activity.UpdateUserInfoActivity" />
         <activity android:name=".Activity.OfficeInAndOutActivity" />
         <activity android:name=".Activity.UserDetailsActivity" />
