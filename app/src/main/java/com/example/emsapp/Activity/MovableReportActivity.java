@@ -216,9 +216,11 @@ public class MovableReportActivity extends AppCompatActivity {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
                 if(task.isSuccessful()){
+                    startTime.setClickable(false);
                     Toast.makeText(MovableReportActivity.this, "Your Office Start Information Updated !", Toast.LENGTH_SHORT).show();
                 }
                 else{
+                    startTime.setClickable(true);
                     Toast.makeText(MovableReportActivity.this, task.getException().getMessage(), Toast.LENGTH_LONG).show();
                 }
 
@@ -244,9 +246,11 @@ public class MovableReportActivity extends AppCompatActivity {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
                 if(task.isSuccessful()){
+                    finishTime.setClickable(false);
                     Toast.makeText(MovableReportActivity.this, "Your Office Finishing Information Updated !", Toast.LENGTH_SHORT).show();
                 }
                 else{
+                    finishTime.setClickable(false);
                     Toast.makeText(MovableReportActivity.this, task.getException().getMessage(), Toast.LENGTH_LONG).show();
                 }
 

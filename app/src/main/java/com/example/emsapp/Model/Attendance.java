@@ -1,6 +1,8 @@
 package com.example.emsapp.Model;
 
-public class Attendance {
+import java.io.Serializable;
+
+public class Attendance implements Serializable {
     private String pgId;
     private String date;
     private String startTime;

@@ -20,7 +20,7 @@ import com.google.firebase.database.FirebaseDatabase;
 
 public class UserHomePageActivity extends AppCompatActivity {
 
-    private CardView profileInfo, checkInOut, movableReport, equipment, attendance, Convenience;
+    private CardView profileInfo, checkInOut, movableReport, movementEvents, attendance, Convenience;
     private TextView userOriginalName;
     private String userName, userRole;
     private DatabaseReference employeeReference;
@@ -121,6 +121,16 @@ public class UserHomePageActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+        movementEvents.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(UserHomePageActivity.this, CheckMovableEventsActivity.class);
+                intent.putExtra("userInfo", employeeInfo);
+                intent.putExtra("userRole", userRole);
+                startActivity(intent);
+            }
+        });
+
     }
 
     private void inItView() {
@@ -129,5 +139,6 @@ public class UserHomePageActivity extends AppCompatActivity {
         movableReport = findViewById(R.id.movableLayout);
         userOriginalName = findViewById(R.id.userName);
         attendance = findViewById(R.id.checkAttendanceLayout);
+        movementEvents = findViewById(R.id.movementCheckLayout);
     }
 }

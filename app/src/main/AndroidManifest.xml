@@ -17,7 +17,12 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true"
         tools:targetApi="m">
-        <activity android:name=".Activity.CheckAttendanceActivity"></activity>
+        <activity android:name=".Activity.UseMovementListActivity"></activity>
+        <activity android:name=".Activity.UserAttendanceListActivity" />
+        <activity android:name=".Activity.CheckMovableEventsActivity" />
+        <activity android:name=".Activity.SelfMovableDetailsActivity" />
+        <activity android:name=".Activity.SelfAttendanceDetailsActivity" />
+        <activity android:name=".Activity.CheckAttendanceActivity" />
         <activity android:name=".Activity.MovableReportActivity" />
         <activity android:name=".Activity.UpdateUserInfoActivity" />
         <activity android:name=".Activity.OfficeInAndOutActivity" />

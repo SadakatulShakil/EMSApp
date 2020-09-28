@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Activity.CheckAttendanceActivity">
+    tools:context=".Activity.CheckMovableEventsActivity">
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
@@ -25,7 +25,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="5dp"
-                android:text="Attendance"
+                android:text="Movement List"
                 android:textAppearance="@style/TextAppearance.AppCompat.Large"
                 android:textColor="@color/white"
                 android:textStyle="bold"
@@ -39,7 +39,7 @@
     </androidx.appcompat.widget.Toolbar>
 
     <LinearLayout
-        android:id="@+id/checkAttendance"
+        android:id="@+id/checkMovement"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
@@ -48,14 +48,14 @@
         app:layout_constraintTop_toBottomOf="@+id/toolbar">
 
         <Button
-            android:id="@+id/selfAttendance"
+            android:id="@+id/selfMovement"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="8dp"
             android:text="Self Attendance" />
 
         <Button
-            android:id="@+id/userAttendance"
+            android:id="@+id/userMovement"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="8dp"
@@ -63,23 +63,8 @@
 
     </LinearLayout>
 
-
     <androidx.recyclerview.widget.RecyclerView
-    android:id="@+id/recyclerViewForAttendanceList"
-    android:layout_width="match_parent"
-    android:layout_height="0dp"
-    android:visibility="gone"
-    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-    app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    app:layout_constraintBottom_toBottomOf="parent"
-    app:layout_constraintEnd_toEndOf="parent"
-    app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintTop_toBottomOf="@+id/checkAttendance"
-    tools:itemCount="7"
-    tools:listitem="@layout/attendance_view" />
-
-  <!--  <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerViewForMovableReportList"
+        android:id="@+id/recyclerViewForMovementList"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:visibility="gone"
@@ -88,12 +73,26 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/toolbar"
+        app:layout_constraintTop_toBottomOf="@+id/checkMovement"
         tools:itemCount="7"
-        tools:listitem="@layout/attendance_view" />-->
+        tools:listitem="@layout/attendance_view" />
+
+    <!--  <androidx.recyclerview.widget.RecyclerView
+          android:id="@+id/recyclerViewForMovableReportList"
+          android:layout_width="match_parent"
+          android:layout_height="0dp"
+          android:visibility="gone"
+          app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+          app:layout_behavior="@string/appbar_scrolling_view_behavior"
+          app:layout_constraintBottom_toBottomOf="parent"
+          app:layout_constraintEnd_toEndOf="parent"
+          app:layout_constraintStart_toStartOf="parent"
+          app:layout_constraintTop_toBottomOf="@+id/toolbar"
+          tools:itemCount="7"
+          tools:listitem="@layout/attendance_view" />-->
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerViewForUserAttendanceList"
+        android:id="@+id/recyclerViewForUserMovementList"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:visibility="gone"
@@ -102,7 +101,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/checkAttendance"
+        app:layout_constraintTop_toBottomOf="@+id/checkMovement"
         tools:itemCount="7"
         tools:listitem="@layout/user_attendance_view" />
 

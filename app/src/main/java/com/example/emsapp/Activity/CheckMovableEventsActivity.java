@@ -13,8 +13,8 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 
-import com.example.emsapp.Adapter.AttendanceAdapter;
-import com.example.emsapp.Adapter.UserListForAttendanceAdapter;
+import com.example.emsapp.Adapter.MovableAdapter;
+import com.example.emsapp.Adapter.UserListForMovementAdapter;
 import com.example.emsapp.Model.Attendance;
 import com.example.emsapp.Model.Employee;
 import com.example.emsapp.R;
@@ -28,87 +28,89 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Locale;
 
-public class CheckAttendanceActivity extends AppCompatActivity {
-    private RecyclerView selfAttendance, userAttendance;
-    private LinearLayout attendanceCheckLayout;
+public class CheckMovableEventsActivity extends AppCompatActivity {
+    private RecyclerView selfMovementRv, userMovementRv;
+    private LinearLayout movementCheckLayout;
     private String userRole, currentMonthName;
-    private ArrayList<Attendance> mAttendanceArrayList = new ArrayList<>();
-    private ArrayList<Attendance> mSelfArrayList = new ArrayList<>();
-    private AttendanceAdapter attendanceAdapter;
-    private DatabaseReference attendanceReference;
+    private ArrayList<Attendance> mMovementArrayList = new ArrayList<>();
+    private ArrayList<Attendance> mSelfMovementList = new ArrayList<>();
+    private MovableAdapter movementAdapter;
+    private DatabaseReference movementReference;
     private ProgressBar progressBar;
     private Employee employeeInfo;
-    private Button selAttendanceBt, userAttendanceBt;
+    private Button selfMovementBt, userMovementBt;
     private ArrayList<Employee> employeeInfoList = new ArrayList<>();
-    private UserListForAttendanceAdapter mEmployeeAdapter;
+    private UserListForMovementAdapter mEmployeeAdapter;
     private DatabaseReference employeeReference;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_check_attendance);
+        setContentView(R.layout.activity_check_movable_events);
+
         inItView();
         Intent intent = getIntent();
         userRole = intent.getStringExtra("userRole");
         employeeInfo = (Employee) intent.getSerializableExtra("userInfo");
 
-        selfAttendance.setLayoutManager(new LinearLayoutManager(CheckAttendanceActivity.this));
-        attendanceAdapter = new AttendanceAdapter(CheckAttendanceActivity.this, mAttendanceArrayList);
-        selfAttendance.setAdapter(attendanceAdapter);
+        selfMovementRv.setLayoutManager(new LinearLayoutManager(CheckMovableEventsActivity.this));
+        movementAdapter = new MovableAdapter(CheckMovableEventsActivity.this, mMovementArrayList);
+        selfMovementRv.setAdapter(movementAdapter);
 
-        userAttendance.setLayoutManager(new LinearLayoutManager(CheckAttendanceActivity.this));
-        mEmployeeAdapter = new UserListForAttendanceAdapter(CheckAttendanceActivity.this, employeeInfoList);
-        userAttendance.setAdapter(mEmployeeAdapter);
+        userMovementRv.setLayoutManager(new LinearLayoutManager(CheckMovableEventsActivity.this));
+        mEmployeeAdapter = new UserListForMovementAdapter(CheckMovableEventsActivity.this, employeeInfoList);
+        userMovementRv.setAdapter(mEmployeeAdapter);
+
 
         if(userRole.equals("General Employee")){
             progressBar.setVisibility(View.VISIBLE);
-            selfAttendance.setVisibility(View.VISIBLE);
-            getSelfAttendance();
+            selfMovementRv.setVisibility(View.VISIBLE);
+            getSelfMovement();
         }
         else if(userRole.equals("General Manager")){
             progressBar.setVisibility(View.VISIBLE);
-            attendanceCheckLayout.setVisibility(View.VISIBLE);
-            selfAttendance.setVisibility(View.VISIBLE);
-            getSelfAttendance();
+            movementCheckLayout.setVisibility(View.VISIBLE);
+            selfMovementRv.setVisibility(View.VISIBLE);
+            getSelfMovement();
 
-            selAttendanceBt.setOnClickListener(new View.OnClickListener() {
+            selfMovementBt.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    selfAttendance.setVisibility(View.VISIBLE);
-                    userAttendance.setVisibility(View.GONE);
-                    getSelfAttendance();
-                }
-            });
-            userAttendanceBt.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    selfAttendance.setVisibility(View.GONE);
-                    userAttendance.setVisibility(View.VISIBLE);
-                    getUserAttendance();
+                    selfMovementRv.setVisibility(View.VISIBLE);
+                    userMovementRv.setVisibility(View.GONE);
+                    getSelfMovement();
                 }
             });
 
+            userMovementBt.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    selfMovementRv.setVisibility(View.GONE);
+                    userMovementRv.setVisibility(View.VISIBLE);
+                    getUserMovement();
+                }
+            });
         }
+
     }
 
-    private void getSelfAttendance() {
+    private void getSelfMovement() {
         Calendar calendar = Calendar.getInstance();
         currentMonthName = calendar.getDisplayName(Calendar.MONTH, Calendar.LONG, Locale.US);
-        attendanceReference = FirebaseDatabase.
+        movementReference = FirebaseDatabase.
                 getInstance().
-                getReference("Attendance");
+                getReference("MovableReport");
 
-        attendanceReference.addChildEventListener(new ChildEventListener() {
+        movementReference.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
-                mAttendanceArrayList.clear();
+                mMovementArrayList.clear();
                 for (DataSnapshot userSnapshot : snapshot.getChildren()) {
                     Attendance attendance = userSnapshot.getValue(Attendance.class);
                     if(employeeInfo.getUserPgId().equals(attendance.getPgId())){
-                        mAttendanceArrayList.add(attendance);
+                        mMovementArrayList.add(attendance);
                     }
                 }
-                attendanceAdapter.notifyDataSetChanged();
+                movementAdapter.notifyDataSetChanged();
                 progressBar.setVisibility(View.GONE);
             }
 
@@ -154,8 +156,7 @@ public class CheckAttendanceActivity extends AppCompatActivity {
             });*/
     }
 
-    private void getUserAttendance() {
-
+    private void getUserMovement() {
         employeeReference = FirebaseDatabase.getInstance().getReference("Employee");
 
 
@@ -196,11 +197,11 @@ public class CheckAttendanceActivity extends AppCompatActivity {
     }
 
     private void inItView() {
-        selfAttendance = findViewById(R.id.recyclerViewForAttendanceList);
-        userAttendance = findViewById(R.id.recyclerViewForUserAttendanceList);
+        selfMovementRv = findViewById(R.id.recyclerViewForMovementList);
+        userMovementRv = findViewById(R.id.recyclerViewForUserMovementList);
         progressBar = findViewById(R.id.progressBar);
-        attendanceCheckLayout = findViewById(R.id.checkAttendance);
-        selAttendanceBt = findViewById(R.id.selfAttendance);
-        userAttendanceBt = findViewById(R.id.userAttendance);
+        movementCheckLayout = findViewById(R.id.checkMovement);
+        selfMovementBt = findViewById(R.id.selfMovement);
+        userMovementBt = findViewById(R.id.userMovement);
     }
 }
