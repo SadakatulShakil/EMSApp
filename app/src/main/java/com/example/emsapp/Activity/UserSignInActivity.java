@@ -71,7 +71,6 @@ public class UserSignInActivity extends AppCompatActivity {
                         finish();
                     } else {
 
-
                         employeeReference = FirebaseDatabase.getInstance().getReference("Employee");
 
 

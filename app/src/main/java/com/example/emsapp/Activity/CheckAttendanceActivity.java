@@ -18,6 +18,7 @@ import com.example.emsapp.Adapter.UserListForAttendanceAdapter;
 import com.example.emsapp.Model.Attendance;
 import com.example.emsapp.Model.Employee;
 import com.example.emsapp.R;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -162,7 +163,6 @@ public class CheckAttendanceActivity extends AppCompatActivity {
         employeeReference.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
-                employeeInfoList.clear();
                 for (DataSnapshot userSnapshot : snapshot.getChildren()) {
                     Employee employeeInfo = userSnapshot.getValue(Employee.class);
 
@@ -192,7 +192,6 @@ public class CheckAttendanceActivity extends AppCompatActivity {
 
             }
         });
-
     }
 
     private void inItView() {
