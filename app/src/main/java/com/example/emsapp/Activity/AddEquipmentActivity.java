@@ -4,9 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
-import android.media.audiofx.DynamicsProcessing;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -14,7 +12,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.example.emsapp.Model.Employee;
-import com.example.emsapp.Model.Equipment;
+import com.example.emsapp.Model.Equipment.Equipment;
 import com.example.emsapp.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -157,6 +155,7 @@ public class AddEquipmentActivity extends AppCompatActivity {
         addBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
                 equipmentReference = FirebaseDatabase.getInstance().getReference("Equipment");
 
                 Equipment equipment = new Equipment(equipmentList, employee.getUserPgId());
@@ -165,6 +164,7 @@ public class AddEquipmentActivity extends AppCompatActivity {
                     public void onComplete(@NonNull Task<Void> task) {
 
                         if(task.isSuccessful()){
+
                             Toast.makeText(AddEquipmentActivity.this,  "Size: "+equipmentList.size(), Toast.LENGTH_SHORT).show();
 
                         }else{
@@ -174,6 +174,7 @@ public class AddEquipmentActivity extends AppCompatActivity {
                     }
                 });
             }
+
         });
 
     }

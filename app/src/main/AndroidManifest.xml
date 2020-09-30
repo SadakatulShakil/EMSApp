@@ -17,7 +17,8 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true"
         tools:targetApi="m">
-        <activity android:name=".Activity.AddEquipmentActivity"></activity>
+        <activity android:name=".Activity.CheckEquipmentActivity"></activity>
+        <activity android:name=".Activity.AddEquipmentActivity" />
         <activity android:name=".Activity.UseMovementListActivity" />
         <activity android:name=".Activity.UserAttendanceListActivity" />
         <activity android:name=".Activity.CheckMovableEventsActivity" />

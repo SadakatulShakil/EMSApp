@@ -1,4 +1,4 @@
-package com.example.emsapp.Model;
+package com.example.emsapp.Model.Equipment;
 
 import java.util.ArrayList;
 
