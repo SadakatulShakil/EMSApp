@@ -28,8 +28,11 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
@@ -43,12 +46,13 @@ public class OfficeInAndOutActivity extends AppCompatActivity {
     private LinearLayout startInformation, finishInformation;
     private TextView startTime, startLocation, finishTime, finishLocation;
     private  String addingTimeForStart, addingTimeForFinish,
-            addingDate, addressForStart, addressForFinish,addressStart, addressFinish, monthName, pushId;
+            addingDate, addressForStart, addressForFinish,addressStart, addressFinish, monthName, setPId, getPId;
     private FusedLocationProviderClient client;
     private Geocoder geocoder;
     private Employee employee;
     private List<Address> addresses;
     public static final String TAG =  "InOut";
+    private String userRole, currentMonthName;
     private DatabaseReference attendanceReference;
 
     @Override
@@ -58,11 +62,12 @@ public class OfficeInAndOutActivity extends AppCompatActivity {
         inItView();
         Intent intent = getIntent();
         employee = (Employee) intent.getSerializableExtra("userInfo");
+        setCheckInOutData();
 
         startOfficeBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startInformation.setVisibility(View.VISIBLE);
+                //startInformation.setVisibility(View.VISIBLE);
                 ///Current Time///
                 Calendar calendar = Calendar.getInstance();
                 SimpleDateFormat myTimeFormat = new SimpleDateFormat("hh:mm a",Locale.US);
@@ -129,7 +134,7 @@ public class OfficeInAndOutActivity extends AppCompatActivity {
         finishOfficeBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                finishInformation.setVisibility(View.VISIBLE);
+                //finishInformation.setVisibility(View.VISIBLE);
                 ///Current Time///
                 Calendar calendar = Calendar.getInstance();
                 SimpleDateFormat myTimeFormat = new SimpleDateFormat("hh:mm a",Locale.US);
@@ -197,14 +202,15 @@ public class OfficeInAndOutActivity extends AppCompatActivity {
         attendanceReference = FirebaseDatabase.getInstance().getReference("Attendance")
                 .child(monthName);
 
+        setPId = attendanceReference.push().getKey();
         Attendance attendanceInfo = new Attendance(
                 employee.getUserPgId(),
                 addingDate,
                 addingTimeForStart,
-                addressStart
+                addressStart,
+                setPId
         );
-        pushId = attendanceReference.push().getKey();
-        attendanceReference.child(pushId).setValue(attendanceInfo).addOnCompleteListener(new OnCompleteListener<Void>() {
+        attendanceReference.child(setPId).setValue(attendanceInfo).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
                 if(task.isSuccessful()){
@@ -230,10 +236,12 @@ public class OfficeInAndOutActivity extends AppCompatActivity {
                 startTime.getText().toString().trim(),
                 startLocation.getText().toString().trim(),
                 addingTimeForFinish,
-                addressStart
+                addressStart,
+                getPId
+
         );
 
-        attendanceReference.child(pushId).setValue(attendanceInfo).addOnCompleteListener(new OnCompleteListener<Void>() {
+        attendanceReference.child(getPId).setValue(attendanceInfo).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
                 if(task.isSuccessful()){
@@ -256,7 +264,37 @@ public class OfficeInAndOutActivity extends AppCompatActivity {
         }
     }
 
+    private void setCheckInOutData() {
+        Calendar calendar = Calendar.getInstance();
+        currentMonthName = calendar.getDisplayName(Calendar.MONTH, Calendar.LONG, Locale.US);
+        attendanceReference = FirebaseDatabase.
+                getInstance().
+                getReference("Attendance")
+                .child(currentMonthName);
 
+        attendanceReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+
+                for (DataSnapshot userSnapshot : snapshot.getChildren()) {
+                    Attendance attendance = userSnapshot.getValue(Attendance.class);
+                    if (employee.getUserPgId().equals(attendance.getPgId())) {
+                        getPId = attendance.getPushId();
+                        startTime.setText(attendance.getStartTime());
+                        startLocation.setText(attendance.getStartLocation());
+                        //Log.d(TAG, "onChildAdded: " + mAttendanceArrayList.size());
+
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+    }
 
 
     private void inItView() {

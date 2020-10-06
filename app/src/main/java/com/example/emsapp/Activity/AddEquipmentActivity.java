@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -138,16 +139,14 @@ public class AddEquipmentActivity extends AppCompatActivity {
                 }
             }
         });
+
         c10.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if(c10.isChecked()){
                     otherEquipmentsEt.setVisibility(View.VISIBLE);
-                    e10 = otherEquipmentsEt.getText().toString().trim();
-                    equipmentList.add(e10);
                 }else{
                     otherEquipmentsEt.setVisibility(View.GONE);
-                    equipmentList.remove(e10);
                 }
             }
         });
@@ -155,6 +154,9 @@ public class AddEquipmentActivity extends AppCompatActivity {
         addBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
+                e10 = otherEquipmentsEt.getText().toString().trim();
+                equipmentList.add(e10);
 
                 equipmentReference = FirebaseDatabase.getInstance().getReference("Equipment");
 
@@ -176,6 +178,18 @@ public class AddEquipmentActivity extends AppCompatActivity {
             }
 
         });
+
+        c1.setChecked(false);
+        c2.setChecked(false);
+        c3.setChecked(false);
+        c4.setChecked(false);
+        c5.setChecked(false);
+        c6.setChecked(false);
+        c7.setChecked(false);
+        c8.setChecked(false);
+        c9.setChecked(false);
+        c10.setChecked(false);
+
 
     }
 

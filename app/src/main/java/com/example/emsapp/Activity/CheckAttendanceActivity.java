@@ -8,8 +8,10 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 
@@ -24,6 +26,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -43,6 +46,8 @@ public class CheckAttendanceActivity extends AppCompatActivity {
     private ArrayList<Employee> employeeInfoList = new ArrayList<>();
     private UserListForAttendanceAdapter mEmployeeAdapter;
     private DatabaseReference employeeReference;
+    public static final String TAG = "attendance";
+    private ImageView historyBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,12 +66,20 @@ public class CheckAttendanceActivity extends AppCompatActivity {
         mEmployeeAdapter = new UserListForAttendanceAdapter(CheckAttendanceActivity.this, employeeInfoList);
         userAttendance.setAdapter(mEmployeeAdapter);
 
-        if(userRole.equals("General Employee")){
+        historyBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent1 = new Intent(CheckAttendanceActivity.this, AttendanceHistoryActivity.class);
+                intent1.putExtra("userInfo", employeeInfo);
+                startActivity(intent1);
+            }
+        });
+
+        if (userRole.equals("General Employee")) {
             progressBar.setVisibility(View.VISIBLE);
             selfAttendance.setVisibility(View.VISIBLE);
             getSelfAttendance();
-        }
-        else if(userRole.equals("General Manager")){
+        } else if (userRole.equals("General Manager") && userRole.equals("Managing Director")) {
             progressBar.setVisibility(View.VISIBLE);
             attendanceCheckLayout.setVisibility(View.VISIBLE);
             selfAttendance.setVisibility(View.VISIBLE);
@@ -97,35 +110,23 @@ public class CheckAttendanceActivity extends AppCompatActivity {
         currentMonthName = calendar.getDisplayName(Calendar.MONTH, Calendar.LONG, Locale.US);
         attendanceReference = FirebaseDatabase.
                 getInstance().
-                getReference("Attendance");
+                getReference("Attendance")
+                .child(currentMonthName);
 
-        attendanceReference.addChildEventListener(new ChildEventListener() {
+        attendanceReference.addValueEventListener(new ValueEventListener() {
             @Override
-            public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
                 mAttendanceArrayList.clear();
                 for (DataSnapshot userSnapshot : snapshot.getChildren()) {
                     Attendance attendance = userSnapshot.getValue(Attendance.class);
-                    if(employeeInfo.getUserPgId().equals(attendance.getPgId())){
+                    if (employeeInfo.getUserPgId().equals(attendance.getPgId())) {
                         mAttendanceArrayList.add(attendance);
+                        Log.d(TAG, "onChildAdded: " + mAttendanceArrayList.size());
+
                     }
                 }
                 attendanceAdapter.notifyDataSetChanged();
                 progressBar.setVisibility(View.GONE);
-            }
-
-            @Override
-            public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
-
-            }
-
-            @Override
-            public void onChildRemoved(@NonNull DataSnapshot snapshot) {
-
-            }
-
-            @Override
-            public void onChildMoved(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
-
             }
 
             @Override
@@ -134,25 +135,6 @@ public class CheckAttendanceActivity extends AppCompatActivity {
             }
         });
 
-      /*  Query query = attendanceReference.orderByChild("pgId").limitToLast(1).equalTo(employeeInfo.getUserPgId());
-
-            query.addListenerForSingleValueEvent(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot snapshot) {
-                    mAttendanceArrayList.clear();
-                    for (DataSnapshot userSnapshot : snapshot.getChildren()) {
-                        Attendance attendance = userSnapshot.getValue(Attendance.class);
-                        mAttendanceArrayList.add(attendance);
-                    }
-                    attendanceAdapter.notifyDataSetChanged();
-                    progressBar.setVisibility(View.GONE);
-                }
-
-                @Override
-                public void onCancelled(@NonNull DatabaseError error) {
-
-                }
-            });*/
     }
 
     private void getUserAttendance() {
@@ -201,5 +183,6 @@ public class CheckAttendanceActivity extends AppCompatActivity {
         attendanceCheckLayout = findViewById(R.id.checkAttendance);
         selAttendanceBt = findViewById(R.id.selfAttendance);
         userAttendanceBt = findViewById(R.id.userAttendance);
+        historyBtn = findViewById(R.id.attendanceHistory);
     }
 }

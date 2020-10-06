@@ -34,12 +34,12 @@
                 android:textStyle="bold"
                 android:textColor="@color/black"/>
 
-            <ImageView
-                android:id="@+id/imageView5"
+         <!--   <ImageView
+                android:id="@+id/deleteEquipment"
                 android:layout_width="wrap_content"
                 android:layout_margin="5dp"
                 android:layout_height="wrap_content"
-               android:src="@drawable/ic_black_delete" />
+               android:src="@drawable/ic_black_delete" />-->
 
         </LinearLayout>
 

@@ -30,4 +30,12 @@ public class Equipment {
     public void setPgId(String pgId) {
         this.pgId = pgId;
     }
+
+    @Override
+    public String toString() {
+        return "Equipment{" +
+                "equipmentName=" + equipmentName +
+                ", pgId='" + pgId + '\'' +
+                '}';
+    }
 }

@@ -3,6 +3,7 @@ package com.example.emsapp.Model;
 import java.io.Serializable;
 
 public class Attendance implements Serializable {
+    private String pushId;
     private String pgId;
     private String date;
     private String startTime;
@@ -17,37 +18,45 @@ public class Attendance implements Serializable {
     public Attendance(String pgId,
                       String date,
                       String startTime,
-                      String startLocation) {
+                      String startLocation,
+                      String pushId) {
         this.pgId = pgId;
         this.date = date;
         this.startTime = startTime;
         this.startLocation = startLocation;
+        this.pushId = pushId;
     }
+
+
 
     public Attendance(String pgId,
                       String date,
                       String startTime,
                       String startLocation,
                       String finishTime,
-                      String finishLocation) {
+                      String finishLocation,
+                      String pushId) {
         this.pgId = pgId;
         this.date = date;
         this.startTime = startTime;
         this.startLocation = startLocation;
         this.finishTime = finishTime;
         this.finishLocation = finishLocation;
+        this.pushId = pushId;
     }
 
     public Attendance(String pgId,
                       String date,
                       String startTime,
                       String startLocation,
-                      String movementReason) {
+                      String movementReason,
+                      String pushId) {
         this.pgId = pgId;
         this.date = date;
         this.startTime = startTime;
         this.startLocation = startLocation;
         this.movementReason = movementReason;
+        this.pushId = pushId;
     }
 
     public Attendance(String pgId,
@@ -56,7 +65,8 @@ public class Attendance implements Serializable {
                       String startLocation,
                       String finishTime,
                       String finishLocation,
-                      String movementReason) {
+                      String movementReason,
+                      String pushId) {
         this.pgId = pgId;
         this.date = date;
         this.startTime = startTime;
@@ -64,6 +74,7 @@ public class Attendance implements Serializable {
         this.finishTime = finishTime;
         this.finishLocation = finishLocation;
         this.movementReason = movementReason;
+        this.pushId = pushId;
     }
 
     public String getPgId() {
@@ -120,5 +131,13 @@ public class Attendance implements Serializable {
 
     public void setMovementReason(String movementReason) {
         this.movementReason = movementReason;
+    }
+
+    public String getPushId() {
+        return pushId;
+    }
+
+    public void setPushId(String pushId) {
+        this.pushId = pushId;
     }
 }

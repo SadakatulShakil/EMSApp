@@ -10,6 +10,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 
@@ -23,6 +24,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -42,6 +44,8 @@ public class CheckMovableEventsActivity extends AppCompatActivity {
     private ArrayList<Employee> employeeInfoList = new ArrayList<>();
     private UserListForMovementAdapter mEmployeeAdapter;
     private DatabaseReference employeeReference;
+    private ImageView historyBtn;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -60,13 +64,20 @@ public class CheckMovableEventsActivity extends AppCompatActivity {
         mEmployeeAdapter = new UserListForMovementAdapter(CheckMovableEventsActivity.this, employeeInfoList);
         userMovementRv.setAdapter(mEmployeeAdapter);
 
+        historyBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent1 = new Intent(CheckMovableEventsActivity.this, MovementHistoryActivity.class);
+                intent1.putExtra("userInfo", employeeInfo);
+                startActivity(intent1);
+            }
+        });
 
-        if(userRole.equals("General Employee")){
+        if (userRole.equals("General Employee")) {
             progressBar.setVisibility(View.VISIBLE);
             selfMovementRv.setVisibility(View.VISIBLE);
             getSelfMovement();
-        }
-        else if(userRole.equals("General Manager")){
+        } else if (userRole.equals("General Manager") && userRole.equals("Managing Director")) {
             progressBar.setVisibility(View.VISIBLE);
             movementCheckLayout.setVisibility(View.VISIBLE);
             selfMovementRv.setVisibility(View.VISIBLE);
@@ -98,15 +109,15 @@ public class CheckMovableEventsActivity extends AppCompatActivity {
         currentMonthName = calendar.getDisplayName(Calendar.MONTH, Calendar.LONG, Locale.US);
         movementReference = FirebaseDatabase.
                 getInstance().
-                getReference("MovableReport");
-
-        movementReference.addChildEventListener(new ChildEventListener() {
+                getReference("MovableReport")
+                .child(currentMonthName);
+        movementReference.addValueEventListener(new ValueEventListener() {
             @Override
-            public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
                 mMovementArrayList.clear();
                 for (DataSnapshot userSnapshot : snapshot.getChildren()) {
                     Attendance attendance = userSnapshot.getValue(Attendance.class);
-                    if(employeeInfo.getUserPgId().equals(attendance.getPgId())){
+                    if (employeeInfo.getUserPgId().equals(attendance.getPgId())) {
                         mMovementArrayList.add(attendance);
                     }
                 }
@@ -115,51 +126,14 @@ public class CheckMovableEventsActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
-
-            }
-
-            @Override
-            public void onChildRemoved(@NonNull DataSnapshot snapshot) {
-
-            }
-
-            @Override
-            public void onChildMoved(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
-
-            }
-
-            @Override
             public void onCancelled(@NonNull DatabaseError error) {
 
             }
         });
-
-      /*  Query query = attendanceReference.orderByChild("pgId").limitToLast(1).equalTo(employeeInfo.getUserPgId());
-
-            query.addListenerForSingleValueEvent(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot snapshot) {
-                    mAttendanceArrayList.clear();
-                    for (DataSnapshot userSnapshot : snapshot.getChildren()) {
-                        Attendance attendance = userSnapshot.getValue(Attendance.class);
-                        mAttendanceArrayList.add(attendance);
-                    }
-                    attendanceAdapter.notifyDataSetChanged();
-                    progressBar.setVisibility(View.GONE);
-                }
-
-                @Override
-                public void onCancelled(@NonNull DatabaseError error) {
-
-                }
-            });*/
     }
 
     private void getUserMovement() {
         employeeReference = FirebaseDatabase.getInstance().getReference("Employee");
-
-
         employeeReference.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
@@ -203,5 +177,6 @@ public class CheckMovableEventsActivity extends AppCompatActivity {
         movementCheckLayout = findViewById(R.id.checkMovement);
         selfMovementBt = findViewById(R.id.selfMovement);
         userMovementBt = findViewById(R.id.userMovement);
+        historyBtn = findViewById(R.id.movementHistory);
     }
 }

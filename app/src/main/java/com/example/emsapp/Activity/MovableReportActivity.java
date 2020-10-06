@@ -29,8 +29,11 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
@@ -44,13 +47,14 @@ public class MovableReportActivity extends AppCompatActivity {
     private LinearLayout startInformation, finishInformation;
     private TextView startTime, startLocation, finishTime, finishLocation, reason;
     private  String addingTimeForStart, addingTimeForFinish,
-            addingDate, addressForStart, addressForFinish,addressStart, addressFinish, monthName, moveReason,pushId;
+            addingDate, addressForStart, addressForFinish,addressStart, addressFinish, monthName, moveReason,setPId, getPId;
     private FusedLocationProviderClient client;
     private Geocoder geocoder;
     private Employee employee;
     private List<Address> addresses;
     public static final String TAG =  "InOut";
     private DatabaseReference movableReportReference;
+    private String userRole, currentMonthName;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -59,10 +63,12 @@ public class MovableReportActivity extends AppCompatActivity {
         Intent intent = getIntent();
         employee = (Employee) intent.getSerializableExtra("userInfo");
 
+        setCheckInOutData();
+
         startOffice.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startInformation.setVisibility(View.VISIBLE);
+                //startInformation.setVisibility(View.VISIBLE);
                 moveReason = reasonTextEt.getText().toString().trim();
                 if (moveReason.isEmpty()) {
                     reasonTextEt.setError("Reason is required!");
@@ -137,7 +143,7 @@ public class MovableReportActivity extends AppCompatActivity {
         finishOffice.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                finishInformation.setVisibility(View.VISIBLE);
+                //finishInformation.setVisibility(View.VISIBLE);
                 ///Current Time///
                 Calendar calendar = Calendar.getInstance();
                 SimpleDateFormat myTimeFormat = new SimpleDateFormat("hh:mm a",Locale.US);
@@ -204,15 +210,16 @@ public class MovableReportActivity extends AppCompatActivity {
         movableReportReference = FirebaseDatabase.getInstance().getReference("MovableReport")
                 .child(monthName);
 
+        setPId = movableReportReference.push().getKey();
         Attendance movableInfo = new Attendance(
                 employee.getUserPgId(),
                 addingDate,
                 addingTimeForStart,
                 addressStart,
-                moveReason
+                moveReason,
+                setPId
         );
-        pushId = movableReportReference.push().getKey();
-        movableReportReference.child(pushId).setValue(movableInfo).addOnCompleteListener(new OnCompleteListener<Void>() {
+        movableReportReference.child(setPId).setValue(movableInfo).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
                 if(task.isSuccessful()){
@@ -239,10 +246,11 @@ public class MovableReportActivity extends AppCompatActivity {
                 startLocation.getText().toString().trim(),
                 addingTimeForFinish,
                 addressStart,
-                reason.getText().toString().trim()
+                reason.getText().toString().trim(),
+                getPId
         );
 
-        movableReportReference.child(pushId).setValue(movableInfo).addOnCompleteListener(new OnCompleteListener<Void>() {
+        movableReportReference.child(getPId).setValue(movableInfo).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
                 if(task.isSuccessful()){
@@ -265,6 +273,38 @@ public class MovableReportActivity extends AppCompatActivity {
         }
     }
 
+    private void setCheckInOutData() {
+        Calendar calendar = Calendar.getInstance();
+        currentMonthName = calendar.getDisplayName(Calendar.MONTH, Calendar.LONG, Locale.US);
+        movableReportReference = FirebaseDatabase.
+                getInstance().
+                getReference("MovableReport")
+                .child(currentMonthName);
+
+        movableReportReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+
+                for (DataSnapshot userSnapshot : snapshot.getChildren()) {
+                    Attendance attendance = userSnapshot.getValue(Attendance.class);
+                    if (employee.getUserPgId().equals(attendance.getPgId())) {
+                        getPId = attendance.getPushId();
+                        startTime.setText(attendance.getStartTime());
+                        startLocation.setText(attendance.getStartLocation());
+                        reason.setText(attendance.getMovementReason());
+                        //Log.d(TAG, "onChildAdded: " + mAttendanceArrayList.size());
+
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+    }
 
 
 
