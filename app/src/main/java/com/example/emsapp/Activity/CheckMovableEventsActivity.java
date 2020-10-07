@@ -77,7 +77,7 @@ public class CheckMovableEventsActivity extends AppCompatActivity {
             progressBar.setVisibility(View.VISIBLE);
             selfMovementRv.setVisibility(View.VISIBLE);
             getSelfMovement();
-        } else if (userRole.equals("General Manager") && userRole.equals("Managing Director")) {
+        } else if (userRole.equals("General Manager") || userRole.equals("Managing Director")) {
             progressBar.setVisibility(View.VISIBLE);
             movementCheckLayout.setVisibility(View.VISIBLE);
             selfMovementRv.setVisibility(View.VISIBLE);
@@ -114,7 +114,6 @@ public class CheckMovableEventsActivity extends AppCompatActivity {
         movementReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                mMovementArrayList.clear();
                 for (DataSnapshot userSnapshot : snapshot.getChildren()) {
                     Attendance attendance = userSnapshot.getValue(Attendance.class);
                     if (employeeInfo.getUserPgId().equals(attendance.getPgId())) {
@@ -137,7 +136,6 @@ public class CheckMovableEventsActivity extends AppCompatActivity {
         employeeReference.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
-                employeeInfoList.clear();
                 for (DataSnapshot userSnapshot : snapshot.getChildren()) {
                     Employee employeeInfo = userSnapshot.getValue(Employee.class);
 

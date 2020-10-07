@@ -7,8 +7,10 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
+import android.media.Image;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 
 import com.example.emsapp.Adapter.AttendanceAdapter;
@@ -36,6 +38,7 @@ public class UserAttendanceListActivity extends AppCompatActivity {
     private ProgressBar progressBar;
     private Employee employeeInfo;
     private String userRole, currentMonthName;
+    private ImageView attendanceHistoryBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,7 +46,7 @@ public class UserAttendanceListActivity extends AppCompatActivity {
         setContentView(R.layout.activity_user_attendance_list);
 
         inItView();
-        Intent intent = getIntent();
+        final Intent intent = getIntent();
         employeeInfo = (Employee) intent.getSerializableExtra("employeeInfo");
 
         userAttendanceListRv.setLayoutManager(new LinearLayoutManager(UserAttendanceListActivity.this));
@@ -51,6 +54,15 @@ public class UserAttendanceListActivity extends AppCompatActivity {
         userAttendanceListRv.setAdapter(attendanceAdapter);
 
         getUserAttendance();
+
+        attendanceHistoryBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent1 = new Intent(UserAttendanceListActivity.this, CheckUserAttendanceHistoryActivity.class);
+                intent1.putExtra("userInfo", employeeInfo);
+                startActivity(intent1);
+            }
+        });
     }
 
     private void getUserAttendance() {
@@ -59,7 +71,8 @@ public class UserAttendanceListActivity extends AppCompatActivity {
         currentMonthName = calendar.getDisplayName(Calendar.MONTH, Calendar.LONG, Locale.US);
         attendanceReference = FirebaseDatabase.
                 getInstance().
-                getReference("Attendance");
+                getReference("Attendance")
+                .child(currentMonthName);
         attendanceReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -79,36 +92,11 @@ public class UserAttendanceListActivity extends AppCompatActivity {
 
             }
         });
-       /* attendanceReference.addChildEventListener(new ChildEventListener() {
-            @Override
-            public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
-
-            }
-
-            @Override
-            public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
-
-            }
-
-            @Override
-            public void onChildRemoved(@NonNull DataSnapshot snapshot) {
-
-            }
-
-            @Override
-            public void onChildMoved(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
-
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        });*/
     }
 
     private void inItView() {
         userAttendanceListRv = findViewById(R.id.recyclerViewForAttendanceList);
         progressBar = findViewById(R.id.progressBar);
+        attendanceHistoryBtn = findViewById(R.id.attendanceHistory);
     }
 }

@@ -41,7 +41,7 @@ public class CheckAttendanceActivity extends AppCompatActivity {
     private AttendanceAdapter attendanceAdapter;
     private DatabaseReference attendanceReference;
     private ProgressBar progressBar;
-    private Employee employeeInfo;
+    private Employee employeeIn;
     private Button selAttendanceBt, userAttendanceBt;
     private ArrayList<Employee> employeeInfoList = new ArrayList<>();
     private UserListForAttendanceAdapter mEmployeeAdapter;
@@ -56,7 +56,7 @@ public class CheckAttendanceActivity extends AppCompatActivity {
         inItView();
         Intent intent = getIntent();
         userRole = intent.getStringExtra("userRole");
-        employeeInfo = (Employee) intent.getSerializableExtra("userInfo");
+        employeeIn = (Employee) intent.getSerializableExtra("userInfo");
 
         selfAttendance.setLayoutManager(new LinearLayoutManager(CheckAttendanceActivity.this));
         attendanceAdapter = new AttendanceAdapter(CheckAttendanceActivity.this, mAttendanceArrayList);
@@ -70,7 +70,7 @@ public class CheckAttendanceActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent intent1 = new Intent(CheckAttendanceActivity.this, AttendanceHistoryActivity.class);
-                intent1.putExtra("userInfo", employeeInfo);
+                intent1.putExtra("userInfo", employeeIn);
                 startActivity(intent1);
             }
         });
@@ -79,7 +79,7 @@ public class CheckAttendanceActivity extends AppCompatActivity {
             progressBar.setVisibility(View.VISIBLE);
             selfAttendance.setVisibility(View.VISIBLE);
             getSelfAttendance();
-        } else if (userRole.equals("General Manager") && userRole.equals("Managing Director")) {
+        } else if (userRole.equals("General Manager") || userRole.equals("Managing Director")) {
             progressBar.setVisibility(View.VISIBLE);
             attendanceCheckLayout.setVisibility(View.VISIBLE);
             selfAttendance.setVisibility(View.VISIBLE);
@@ -119,7 +119,7 @@ public class CheckAttendanceActivity extends AppCompatActivity {
                 mAttendanceArrayList.clear();
                 for (DataSnapshot userSnapshot : snapshot.getChildren()) {
                     Attendance attendance = userSnapshot.getValue(Attendance.class);
-                    if (employeeInfo.getUserPgId().equals(attendance.getPgId())) {
+                    if (employeeIn.getUserPgId().equals(attendance.getPgId())) {
                         mAttendanceArrayList.add(attendance);
                         Log.d(TAG, "onChildAdded: " + mAttendanceArrayList.size());
 
@@ -140,8 +140,6 @@ public class CheckAttendanceActivity extends AppCompatActivity {
     private void getUserAttendance() {
 
         employeeReference = FirebaseDatabase.getInstance().getReference("Employee");
-
-
         employeeReference.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
@@ -149,6 +147,7 @@ public class CheckAttendanceActivity extends AppCompatActivity {
                     Employee employeeInfo = userSnapshot.getValue(Employee.class);
 
                     employeeInfoList.add(employeeInfo);
+
                 }
                 mEmployeeAdapter.notifyDataSetChanged();
                 progressBar.setVisibility(View.GONE);

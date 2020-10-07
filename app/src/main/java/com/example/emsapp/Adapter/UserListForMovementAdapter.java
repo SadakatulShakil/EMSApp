@@ -10,7 +10,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.emsapp.Activity.UseMovementListActivity;
+import com.example.emsapp.Activity.UserMovementListActivity;
 import com.example.emsapp.Model.Employee;
 import com.example.emsapp.R;
 
@@ -44,7 +44,7 @@ public class UserListForMovementAdapter extends RecyclerView.Adapter<UserListFor
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(context, UseMovementListActivity.class);
+                Intent intent = new Intent(context, UserMovementListActivity.class);
                 intent.putExtra("employeeInfo", employeeInfo);
                 context.startActivity(intent);
             }

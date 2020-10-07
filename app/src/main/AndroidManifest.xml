@@ -17,11 +17,14 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true"
         tools:targetApi="m">
-        <activity android:name=".Activity.MovementHistoryActivity"></activity>
+        <activity android:name=".Activity.ExecutiveReportActivity"></activity>
+        <activity android:name=".Activity.CheckUserMovementHistoryActivity" />
+        <activity android:name=".Activity.CheckUserAttendanceHistoryActivity" />
+        <activity android:name=".Activity.MovementHistoryActivity" />
         <activity android:name=".Activity.AttendanceHistoryActivity" />
         <activity android:name=".Activity.CheckEquipmentActivity" />
         <activity android:name=".Activity.AddEquipmentActivity" />
-        <activity android:name=".Activity.UseMovementListActivity" />
+        <activity android:name=".Activity.UserMovementListActivity" />
         <activity android:name=".Activity.UserAttendanceListActivity" />
         <activity android:name=".Activity.CheckMovableEventsActivity" />
         <activity android:name=".Activity.SelfMovableDetailsActivity" />

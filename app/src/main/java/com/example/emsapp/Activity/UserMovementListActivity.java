@@ -1,7 +1,6 @@
 package com.example.emsapp.Activity;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -9,14 +8,13 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 
-import com.example.emsapp.Adapter.AttendanceAdapter;
 import com.example.emsapp.Adapter.MovableAdapter;
 import com.example.emsapp.Model.Attendance;
 import com.example.emsapp.Model.Employee;
 import com.example.emsapp.R;
-import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -27,7 +25,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Locale;
 
-public class UseMovementListActivity extends AppCompatActivity {
+public class UserMovementListActivity extends AppCompatActivity {
     private RecyclerView userMovementListRv;
     private ArrayList<Attendance> mAttendanceArrayList = new ArrayList<>();
     private ArrayList<Attendance> mSelfArrayList = new ArrayList<>();
@@ -36,20 +34,30 @@ public class UseMovementListActivity extends AppCompatActivity {
     private ProgressBar progressBar;
     private Employee employeeInfo;
     private String userRole, currentMonthName;
+    private ImageView movementHistoryBtn;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_use_movement_list);
+        setContentView(R.layout.activity_user_movement_list);
 
         inItView();
         Intent intent = getIntent();
         employeeInfo = (Employee) intent.getSerializableExtra("employeeInfo");
 
-        userMovementListRv.setLayoutManager(new LinearLayoutManager(UseMovementListActivity.this));
-        userMovementAdapter = new MovableAdapter(UseMovementListActivity.this, mAttendanceArrayList);
+        userMovementListRv.setLayoutManager(new LinearLayoutManager(UserMovementListActivity.this));
+        userMovementAdapter = new MovableAdapter(UserMovementListActivity.this, mAttendanceArrayList);
         userMovementListRv.setAdapter(userMovementAdapter);
 
         getUserMovement();
+
+        movementHistoryBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent1 = new Intent(UserMovementListActivity.this, CheckUserMovementHistoryActivity.class);
+                intent1.putExtra("userInfo", employeeInfo);
+                startActivity(intent1);
+            }
+        });
 
     }
 
@@ -59,7 +67,8 @@ public class UseMovementListActivity extends AppCompatActivity {
         currentMonthName = calendar.getDisplayName(Calendar.MONTH, Calendar.LONG, Locale.US);
         movementReference = FirebaseDatabase.
                 getInstance().
-                getReference("MovableReport");
+                getReference("MovableReport")
+                .child(currentMonthName);
         movementReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -79,36 +88,11 @@ public class UseMovementListActivity extends AppCompatActivity {
 
             }
         });
-     /*   movementReference.addChildEventListener(new ChildEventListener() {
-            @Override
-            public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
-
-            }
-
-            @Override
-            public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
-
-            }
-
-            @Override
-            public void onChildRemoved(@NonNull DataSnapshot snapshot) {
-
-            }
-
-            @Override
-            public void onChildMoved(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
-
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        });*/
     }
 
     private void inItView() {
         userMovementListRv = findViewById(R.id.recyclerViewForMovementList);
         progressBar = findViewById(R.id.progressBar);
+        movementHistoryBtn = findViewById(R.id.movementHistory);
     }
 }
