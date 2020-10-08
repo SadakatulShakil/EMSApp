@@ -1,8 +1,9 @@
 package com.example.emsapp.Model.Equipment;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class Equipment {
+public class Equipment implements Serializable {
 
     private ArrayList<String> equipmentName;
     private String pgId;

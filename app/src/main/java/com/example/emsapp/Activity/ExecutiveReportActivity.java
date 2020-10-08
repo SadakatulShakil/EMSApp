@@ -13,6 +13,7 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TimePicker;
 import android.widget.Toast;
@@ -28,12 +29,13 @@ import com.google.firebase.database.FirebaseDatabase;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Locale;
 
 public class ExecutiveReportActivity extends AppCompatActivity {
 
     private EditText nameEt, phoneEt, dateEt, organizationNameEt, addressEt, quiresEt, givenAdviceEt, remarksEt;
     private CheckBox cb1, cb2, cb3;
-    private String accessName1, accessName2, accessName3;
+    private String accessName1, accessName2, accessName3, currentMonthName;
     private Button submitBtn;
     private ProgressBar progressBar;
     private Employee employee;
@@ -41,6 +43,7 @@ public class ExecutiveReportActivity extends AppCompatActivity {
     private ArrayList<String> accessibleNameList = new ArrayList<>();
     private DatabaseReference executionReference;
     public static final String TAG = "Executive";
+    private ImageView historyBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,6 +52,14 @@ public class ExecutiveReportActivity extends AppCompatActivity {
         inItView();
         Intent intent = getIntent();
         employee = (Employee) intent.getSerializableExtra("userInfo");
+
+        historyBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent1 = new Intent(ExecutiveReportActivity.this, ExecutionReportHistoryActivity.class);
+                startActivity(intent1);
+            }
+        });
 
         dateEt.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -150,8 +161,9 @@ public class ExecutiveReportActivity extends AppCompatActivity {
                                     final String date, final String organizationName,
                                     final String address, final String quire,
                                     final String advice, final String remarks) {
-
-        executionReference = FirebaseDatabase.getInstance().getReference("Executive");
+        Calendar calendar = Calendar.getInstance();
+        currentMonthName = calendar.getDisplayName(Calendar.MONTH, Calendar.LONG, Locale.US);
+        executionReference = FirebaseDatabase.getInstance().getReference("Executive").child(currentMonthName);
         pushId = executionReference.push().getKey();
         Execution executionInfo = new Execution(
                 pushId,
@@ -182,12 +194,13 @@ public class ExecutiveReportActivity extends AppCompatActivity {
         organizationNameEt = findViewById(R.id.callerOrganization);
         addressEt = findViewById(R.id.callerAddress);
         quiresEt = findViewById(R.id.callerQuire);
-        givenAdviceEt = findViewById(R.id.ourGivenAdvise);
+        givenAdviceEt = findViewById(R.id.ourAdvice);
         remarksEt = findViewById(R.id.remarks);
         cb1 = findViewById(R.id.checkBox1);
         cb2 = findViewById(R.id.checkBox2);
         cb3 = findViewById(R.id.checkBox3);
         submitBtn = findViewById(R.id.btnSubmit);
         progressBar = findViewById(R.id.progressBar);
+        historyBtn = findViewById(R.id.reportHistory);
     }
 }

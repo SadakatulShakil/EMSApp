@@ -31,6 +31,15 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
+            <ImageView
+                android:id="@+id/reportHistory"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:src="@drawable/history_icon"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -212,7 +221,7 @@
                     app:layout_constraintTop_toBottomOf="@+id/callerAddress" />
 
                 <EditText
-                    android:id="@+id/ourGivenAdvise"
+                    android:id="@+id/ourAdvice"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="8dp"
@@ -220,7 +229,7 @@
                     android:layout_marginRight="8dp"
                     android:ems="10"
                     android:gravity="center"
-                    android:hint="Our GivenAdvise"
+                    android:hint="Given an Advice"
                     android:imeOptions="actionNext"
                     android:inputType="textCapWords"
                     android:padding="12dp"
@@ -244,7 +253,7 @@
                     android:padding="12dp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/ourGivenAdvise" />
+                    app:layout_constraintTop_toBottomOf="@+id/ourAdvice" />
 
                 <Button
                     android:id="@+id/btnSubmit"

@@ -1,8 +1,9 @@
 package com.example.emsapp.Model;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class Execution {
+public class Execution implements Serializable {
     private String pushId;
     private ArrayList<String> accessibleName;
     private String callerName;
