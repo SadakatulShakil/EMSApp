@@ -23,7 +23,7 @@ public class UserHomePageActivity extends AppCompatActivity {
     private CardView profileInfo, checkInOut, movableReport,
             movementEvents, attendance, addEquipment, executionReport;
     private TextView userOriginalName;
-    private String userName, userRole;
+    private String PgId, userRole;
     private DatabaseReference employeeReference;
 
 
@@ -34,7 +34,7 @@ public class UserHomePageActivity extends AppCompatActivity {
 
         inItView();
         Intent intent = getIntent();
-        userName = intent.getStringExtra("userName");
+        PgId = intent.getStringExtra("pgId");
         getAuthUserData();
 
     }
@@ -49,12 +49,18 @@ public class UserHomePageActivity extends AppCompatActivity {
                 for (DataSnapshot userSnapshot : snapshot.getChildren()) {
                     Employee employeeInfo = userSnapshot.getValue(Employee.class);
 
-                    if(employeeInfo.getUserPgId().equals(userName)){
+                    if(employeeInfo.getUserPgId().equals(PgId)){
                         userOriginalName.setText("Hello! "+ employeeInfo.getUserName());
                         userRole = employeeInfo.getUserRole();
                         GoForDetails(employeeInfo);
                         GoForCheckInOutInfo(employeeInfo,userRole);
+
+                        if(employeeInfo.getUserDepartment().equals("Executive") ||
+                                employeeInfo.getUserDepartment().equals("HR_Admin")){
+                            executionReport.setVisibility(View.VISIBLE);
+                        }
                     }
+
                 }
             }
 

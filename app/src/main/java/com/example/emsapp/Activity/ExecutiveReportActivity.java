@@ -2,6 +2,8 @@ package com.example.emsapp.Activity;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
@@ -9,22 +11,32 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
+import com.example.emsapp.Adapter.ExecutionAdapter;
+import com.example.emsapp.Adapter.MonthAdapter;
 import com.example.emsapp.Model.Employee;
 import com.example.emsapp.Model.Execution;
+import com.example.emsapp.Model.Month;
 import com.example.emsapp.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -34,8 +46,9 @@ import java.util.Locale;
 public class ExecutiveReportActivity extends AppCompatActivity {
 
     private EditText nameEt, phoneEt, dateEt, organizationNameEt, addressEt, quiresEt, givenAdviceEt, remarksEt;
+    private LinearLayout layoutOfExecutive, layoutOfAccessPerson;
     private CheckBox cb1, cb2, cb3;
-    private String accessName1, accessName2, accessName3, currentMonthName;
+    private String accessName1, accessName2, accessName3, currentMonthName, monthName;
     private Button submitBtn;
     private ProgressBar progressBar;
     private Employee employee;
@@ -43,21 +56,54 @@ public class ExecutiveReportActivity extends AppCompatActivity {
     private ArrayList<String> accessibleNameList = new ArrayList<>();
     private DatabaseReference executionReference;
     public static final String TAG = "Executive";
-    private ImageView historyBtn;
+    private ImageView historyBtn, refreshBtn;
+    private RecyclerView executionReportHistoryList;
+    private Spinner monthSpinner;
+    private ArrayList<Month> monthArrayList;
+    private MonthAdapter monthAdapter;
+    private DatabaseReference executionReportReference;
+    private ArrayList<Execution> executionReportArrayList = new ArrayList<>();;
+    private ExecutionAdapter executionAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_executive_report);
+        inItList();
         inItView();
         Intent intent = getIntent();
         employee = (Employee) intent.getSerializableExtra("userInfo");
+            ////for AccessUser ///////////
+
+        executionReportHistoryList.setLayoutManager(new LinearLayoutManager(ExecutiveReportActivity.this));
+        executionAdapter = new ExecutionAdapter(ExecutiveReportActivity.this, executionReportArrayList);
+        executionReportHistoryList.setAdapter(executionAdapter);
+
+        Calendar calendar = Calendar.getInstance();
+        currentMonthName = calendar.getDisplayName(Calendar.MONTH, Calendar.LONG, Locale.US);
+        getCurrentMonthReport(currentMonthName);
+        ///////////////////////////////////////////////
+
+        if(!employee.getUserDepartment().equals("Executive")){
+            historyBtn.setVisibility(View.GONE);
+            refreshBtn.setVisibility(View.VISIBLE);
+            layoutOfExecutive.setVisibility(View.GONE);
+            layoutOfAccessPerson.setVisibility(View.VISIBLE);
+        }
 
         historyBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent1 = new Intent(ExecutiveReportActivity.this, ExecutionReportHistoryActivity.class);
                 startActivity(intent1);
+            }
+        });
+
+        refreshBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                getCurrentMonthReport(currentMonthName);
+                Toast.makeText(ExecutiveReportActivity.this, "Report is Refreshed!", Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -187,6 +233,51 @@ public class ExecutiveReportActivity extends AppCompatActivity {
 
     }
 
+    private void getCurrentMonthReport(String currentMonthName) {
+
+        executionReportReference = FirebaseDatabase.getInstance().getReference("Executive")
+                .child(currentMonthName);
+
+        executionReportReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                executionReportArrayList.clear();
+                for (DataSnapshot userSnapshot : snapshot.getChildren()) {
+                    Execution executionInfo = userSnapshot.getValue(Execution.class);
+                    executionReportArrayList.add(executionInfo);
+
+                    executionReportHistoryList.setLayoutManager(new LinearLayoutManager(ExecutiveReportActivity.this));
+                    executionAdapter = new ExecutionAdapter(ExecutiveReportActivity.this, executionReportArrayList);
+                    executionReportHistoryList.setAdapter(executionAdapter);
+                }
+                Log.d(TAG, "onChildAdded: " + executionReportArrayList.size());
+                executionAdapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
+
+    private void inItList() {
+        monthArrayList = new ArrayList<>();
+        monthArrayList.add(new Month("Current Month"));
+        monthArrayList.add(new Month("January"));
+        monthArrayList.add(new Month("February"));
+        monthArrayList.add(new Month("March"));
+        monthArrayList.add(new Month("April"));
+        monthArrayList.add(new Month("May"));
+        monthArrayList.add(new Month("June"));
+        monthArrayList.add(new Month("July"));
+        monthArrayList.add(new Month("August"));
+        monthArrayList.add(new Month("September"));
+        monthArrayList.add(new Month("October"));
+        monthArrayList.add(new Month("November"));
+        monthArrayList.add(new Month("December"));
+    }
+
     private void inItView() {
         nameEt = findViewById(R.id.callerName);
         phoneEt = findViewById(R.id.callerContact);
@@ -202,5 +293,62 @@ public class ExecutiveReportActivity extends AppCompatActivity {
         submitBtn = findViewById(R.id.btnSubmit);
         progressBar = findViewById(R.id.progressBar);
         historyBtn = findViewById(R.id.reportHistory);
+        refreshBtn = findViewById(R.id.refreshReportHistory);
+        layoutOfExecutive = findViewById(R.id.executiveLayout);
+        layoutOfAccessPerson = findViewById(R.id.accessibleLayout);
+        executionReportHistoryList = findViewById(R.id.recyclerViewForExecutionList);
+
+        monthSpinner = findViewById(R.id.monthSpinner);
+
+        monthAdapter = new MonthAdapter(ExecutiveReportActivity.this, monthArrayList);
+        monthSpinner.setAdapter(monthAdapter);
+
+        monthSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                Month clickedMonth = (Month) parent.getItemAtPosition(position);
+
+                monthName = clickedMonth.getMonthName();
+                if(monthName.equals("Current Month")){
+                    Toast.makeText(ExecutiveReportActivity.this, "Please Select Your desire month name", Toast.LENGTH_SHORT).show();
+                }else{
+
+                    getDesireReportList(monthName);
+                }
+
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
+    }
+
+    private void getDesireReportList(String monthName) {
+        executionReportReference = FirebaseDatabase.getInstance().getReference("Executive")
+                .child(monthName);
+
+        executionReportReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                executionReportArrayList.clear();
+                for (DataSnapshot userSnapshot : snapshot.getChildren()) {
+                    Execution executionInfo = userSnapshot.getValue(Execution.class);
+                    executionReportArrayList.add(executionInfo);
+
+                }
+                Log.d(TAG, "onChildAdded: " + executionReportArrayList.size());
+                executionAdapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+
     }
 }

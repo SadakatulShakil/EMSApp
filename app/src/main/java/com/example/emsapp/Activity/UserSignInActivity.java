@@ -32,13 +32,13 @@ import java.util.ArrayList;
 
 public class UserSignInActivity extends AppCompatActivity {
     private TextView userType;
-    private EditText userNameEt, userPasswordEt, confirmPasswordEt;
+    private EditText userNameEt, userPasswordEt;
     private Button signInBt;
     private ProgressBar progressBar;
     private String userRole;
     private ArrayList<Employee> employeeInfoList = new ArrayList<>();
     private DatabaseReference employeeReference;
-    private String uName, uPassword, confirmPassword;
+    private String uName, uPassword;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,9 +61,7 @@ public class UserSignInActivity extends AppCompatActivity {
                 progressBar.setVisibility(View.VISIBLE);
                 uName = userNameEt.getText().toString().trim();
                 uPassword = userPasswordEt.getText().toString().trim();
-                confirmPassword = confirmPasswordEt.getText().toString().trim();
 
-                if (uPassword.equals(confirmPassword)) {
                     if (uName.equals("Admin") && uPassword.equals("123321")) {
                         progressBar.setVisibility(View.GONE);
                         Intent intent = new Intent(UserSignInActivity.this, AdminControllerActivity.class);
@@ -72,7 +70,6 @@ public class UserSignInActivity extends AppCompatActivity {
                     } else {
 
                         employeeReference = FirebaseDatabase.getInstance().getReference("Employee");
-
 
                         employeeReference.addChildEventListener(new ChildEventListener() {
                             @Override
@@ -83,7 +80,7 @@ public class UserSignInActivity extends AppCompatActivity {
                                             && employeeInfo.getUserPassword().equals(uPassword)) {
                                         progressBar.setVisibility(View.GONE);
                                         Intent intent = new Intent(UserSignInActivity.this, UserHomePageActivity.class);
-                                        intent.putExtra("userName", uName);
+                                        intent.putExtra("pgId", uName);
                                         startActivity(intent);
                                         finish();
                                     }
@@ -113,7 +110,6 @@ public class UserSignInActivity extends AppCompatActivity {
                             }
                         });
                     }
-                }
             }
         });
 
@@ -124,7 +120,6 @@ public class UserSignInActivity extends AppCompatActivity {
         userType = findViewById(R.id.demoUser);
         userNameEt = findViewById(R.id.etUserName);
         userPasswordEt = findViewById(R.id.etUserPassword);
-        confirmPasswordEt = findViewById(R.id.etConfirmPassword);
         signInBt = findViewById(R.id.btnSignIn);
         progressBar = findViewById(R.id.progressBar);
     }

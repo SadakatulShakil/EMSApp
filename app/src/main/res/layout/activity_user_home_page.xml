@@ -315,6 +315,7 @@
                         android:id="@+id/executionLayout"
                         android:layout_width="100dp"
                         android:layout_height="100dp"
+                        android:visibility="gone"
                         android:layout_margin="8dp"
                         android:elevation="16dp"
                         app:cardCornerRadius="8dp">
