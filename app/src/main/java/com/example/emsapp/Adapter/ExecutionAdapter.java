@@ -12,6 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.emsapp.Activity.ExecutionReportDetailsActivity;
+import com.example.emsapp.Model.Employee;
 import com.example.emsapp.Model.Execution;
 import com.example.emsapp.R;
 
@@ -20,10 +21,12 @@ import java.util.ArrayList;
 public class ExecutionAdapter extends RecyclerView.Adapter<ExecutionAdapter.viewHolder> {
     private Context context;
     private ArrayList<Execution> executionArrayList;
+    private Employee employeeInfo;
 
-    public ExecutionAdapter(Context context, ArrayList<Execution> executionArrayList) {
+    public ExecutionAdapter(Context context, ArrayList<Execution> executionArrayList, Employee employeeInfo) {
         this.context = context;
         this.executionArrayList = executionArrayList;
+        this.employeeInfo = employeeInfo;
     }
 
     @NonNull
@@ -46,6 +49,7 @@ public class ExecutionAdapter extends RecyclerView.Adapter<ExecutionAdapter.view
             public void onClick(View view) {
                 Intent intent1 = new Intent(context, ExecutionReportDetailsActivity.class);
                 intent1.putExtra("executionInfo", executionInfo);
+                intent1.putExtra("employeeInfo", employeeInfo);
                 context.startActivity(intent1);
             }
         });

@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -49,9 +50,10 @@ public class ExecutionReportHistoryActivity extends AppCompatActivity {
         setContentView(R.layout.activity_execution_report_history);
         inItList();
         inItView();
-
+        Intent intent1 = getIntent();
+        employeeInfo = (Employee) intent1.getSerializableExtra("employeeInfo");
         executionReportHistoryList.setLayoutManager(new LinearLayoutManager(ExecutionReportHistoryActivity.this));
-        executionAdapter = new ExecutionAdapter(ExecutionReportHistoryActivity.this, executionReportArrayList);
+        executionAdapter = new ExecutionAdapter(ExecutionReportHistoryActivity.this, executionReportArrayList, employeeInfo);
         executionReportHistoryList.setAdapter(executionAdapter);
 
         Calendar calendar = Calendar.getInstance();
@@ -73,7 +75,7 @@ public class ExecutionReportHistoryActivity extends AppCompatActivity {
                         executionReportArrayList.add(executionInfo);
 
                     executionReportHistoryList.setLayoutManager(new LinearLayoutManager(ExecutionReportHistoryActivity.this));
-                    executionAdapter = new ExecutionAdapter(ExecutionReportHistoryActivity.this, executionReportArrayList);
+                    executionAdapter = new ExecutionAdapter(ExecutionReportHistoryActivity.this, executionReportArrayList, employeeInfo);
                     executionReportHistoryList.setAdapter(executionAdapter);
                 }
                 Log.d(TAG, "onChildAdded: " + executionReportArrayList.size());

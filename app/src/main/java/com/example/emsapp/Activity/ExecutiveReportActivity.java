@@ -76,7 +76,7 @@ public class ExecutiveReportActivity extends AppCompatActivity {
             ////for AccessUser ///////////
 
         executionReportHistoryList.setLayoutManager(new LinearLayoutManager(ExecutiveReportActivity.this));
-        executionAdapter = new ExecutionAdapter(ExecutiveReportActivity.this, executionReportArrayList);
+        executionAdapter = new ExecutionAdapter(ExecutiveReportActivity.this, executionReportArrayList, employee);
         executionReportHistoryList.setAdapter(executionAdapter);
 
         Calendar calendar = Calendar.getInstance();
@@ -95,6 +95,7 @@ public class ExecutiveReportActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent intent1 = new Intent(ExecutiveReportActivity.this, ExecutionReportHistoryActivity.class);
+                intent1.putExtra("employeeInfo", employee);
                 startActivity(intent1);
             }
         });
@@ -247,7 +248,7 @@ public class ExecutiveReportActivity extends AppCompatActivity {
                     executionReportArrayList.add(executionInfo);
 
                     executionReportHistoryList.setLayoutManager(new LinearLayoutManager(ExecutiveReportActivity.this));
-                    executionAdapter = new ExecutionAdapter(ExecutiveReportActivity.this, executionReportArrayList);
+                    executionAdapter = new ExecutionAdapter(ExecutiveReportActivity.this, executionReportArrayList, employee);
                     executionReportHistoryList.setAdapter(executionAdapter);
                 }
                 Log.d(TAG, "onChildAdded: " + executionReportArrayList.size());
