@@ -221,34 +221,47 @@
 
                 </LinearLayout>
 
-                <EditText
-                    android:id="@+id/feedBackEt"
+                <LinearLayout
+                    android:id="@+id/feedBackLayout"
                     android:layout_width="match_parent"
-                    android:layout_height="100dp"
-                    android:ems="10"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Large"
-                    android:background="@drawable/border"
-                    android:layout_margin="8dp"
-                    android:padding="8dp"
-                    android:inputType="textPersonName"
-                    android:hint="Give a feed-Back here Sir"
-                    app:layout_constraintTop_toBottomOf="@+id/linearLayout" />
-
-                <Button
-                    android:id="@+id/sendBtn"
-                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_margin="8dp"
-                    android:text="Send"
+                    android:orientation="vertical"
+                    android:layout_margin="5dp"
+                    android:visibility="gone"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/feedBackEt" />
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/linearLayout">
+
+                    <EditText
+                        android:id="@+id/feedBackEt"
+                        android:layout_width="match_parent"
+                        android:layout_height="100dp"
+                        android:layout_margin="8dp"
+                        android:background="@drawable/border"
+                        android:ems="10"
+                        android:hint="Give a feed-Back here Sir"
+                        android:inputType="textPersonName"
+                        android:padding="8dp"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                        app:layout_constraintTop_toBottomOf="@+id/linearLayout" />
+
+                    <Button
+                        android:id="@+id/sendBtn"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="8dp"
+                        android:text="Send"
+                        android:layout_gravity="end"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/feedBackEt" />
+
+                </LinearLayout>
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
         </LinearLayout>
-
-
 
     </ScrollView>
 

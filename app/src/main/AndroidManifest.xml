@@ -17,7 +17,14 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true"
         tools:targetApi="m">
-        <activity android:name=".Activity.ExecutionReportDetailsActivity"></activity>
+        <activity android:name=".Activity.SplashScreenActivity">
+            <intent-filter>
+            <action android:name="android.intent.action.MAIN" />
+
+            <category android:name="android.intent.category.LAUNCHER" />
+        </intent-filter>
+        </activity>
+        <activity android:name=".Activity.ExecutionReportDetailsActivity" />
         <activity android:name=".Activity.ExecutionReportHistoryActivity" />
         <activity android:name=".Activity.ExecutiveReportActivity" />
         <activity android:name=".Activity.CheckUserMovementHistoryActivity" />
@@ -41,13 +48,7 @@
         <activity android:name=".Activity.AddEmployeeActivity" />
         <activity android:name=".Activity.AdminControllerActivity" />
         <activity android:name=".Activity.UserSignInActivity" />
-        <activity android:name=".MainActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
+        <activity android:name=".MainActivity"></activity>
     </application>
 
 </manifest>
