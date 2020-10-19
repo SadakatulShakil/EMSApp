@@ -266,6 +266,8 @@ public class OfficeInAndOutActivity extends AppCompatActivity {
 
     private void setCheckInOutData() {
         Calendar calendar = Calendar.getInstance();
+        SimpleDateFormat myDateFormat = new SimpleDateFormat("dd-MM-yyyy",Locale.US);
+        final String currentDate = myDateFormat.format(calendar.getTime());
         currentMonthName = calendar.getDisplayName(Calendar.MONTH, Calendar.LONG, Locale.US);
         attendanceReference = FirebaseDatabase.
                 getInstance().
@@ -278,10 +280,13 @@ public class OfficeInAndOutActivity extends AppCompatActivity {
 
                 for (DataSnapshot userSnapshot : snapshot.getChildren()) {
                     Attendance attendance = userSnapshot.getValue(Attendance.class);
-                    if (employee.getUserPgId().equals(attendance.getPgId())) {
+                    if (employee.getUserPgId().equals(attendance.getPgId()) && attendance.getDate().equals(currentDate)) {
                         getPId = attendance.getPushId();
                         startTime.setText(attendance.getStartTime());
                         startLocation.setText(attendance.getStartLocation());
+
+                        finishTime.setText(attendance.getFinishTime());
+                        finishLocation.setText(attendance.getFinishLocation());
                         //Log.d(TAG, "onChildAdded: " + mAttendanceArrayList.size());
 
                     }
