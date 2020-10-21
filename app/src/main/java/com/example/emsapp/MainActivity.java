@@ -36,6 +36,7 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    //////User Role List for DropDownList/////
     private void inItUserRoleList() {
         mUserRoleList = new ArrayList<>();
         mUserRoleList.add(new UserRole("Select User Role.."));
@@ -65,11 +66,10 @@ public class MainActivity extends AppCompatActivity {
     private void inItView() {
         letsContinue = findViewById(R.id.btnToLogin);
 
+        /////////User Role View Adapter work/////////
         userRoleSpinner = findViewById(R.id.userRoleSpinner);
         mUserRoleAdapter = new UserRoleAdapter(MainActivity.this, mUserRoleList);
-
         userRoleSpinner.setAdapter(mUserRoleAdapter);
-
         userRoleSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {

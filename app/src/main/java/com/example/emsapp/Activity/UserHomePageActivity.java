@@ -34,6 +34,7 @@ public class UserHomePageActivity extends AppCompatActivity {
 
         inItView();
         Intent intent = getIntent();
+        ////Data came from User SignInActivity//////
         PgId = intent.getStringExtra("pgId");
         getAuthUserData();
 
@@ -54,7 +55,7 @@ public class UserHomePageActivity extends AppCompatActivity {
                         userRole = employeeInfo.getUserRole();
                         GoForDetails(employeeInfo);
                         GoForCheckInOutInfo(employeeInfo,userRole);
-
+                        //////Different userInterface process///////////
                         if(employeeInfo.getUserDepartment().equals("Executive") ||
                                 employeeInfo.getUserDepartment().equals("HR_Admin")){
                             executionReport.setVisibility(View.VISIBLE);
@@ -88,7 +89,7 @@ public class UserHomePageActivity extends AppCompatActivity {
     }
 
 
-
+        ///////Different option Working Process////////
     private void GoForDetails(final Employee employeeInfo) {
         profileInfo.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -99,7 +100,7 @@ public class UserHomePageActivity extends AppCompatActivity {
             }
         });
     }
-
+    ///////Different option Working Process////////
     private void GoForCheckInOutInfo(final Employee employeeInfo, final String userRole) {
         checkInOut.setOnClickListener(new View.OnClickListener() {
             @Override
