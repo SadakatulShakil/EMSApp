@@ -37,20 +37,20 @@
 
     </androidx.appcompat.widget.Toolbar>
 
-    <TextView
-        android:id="@+id/demoUser"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+    <Spinner
+        android:id="@+id/userRoleSpinner"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
         android:layout_margin="16dp"
-        android:gravity="center"
-        android:text="Employee"
-        android:textColor="@color/black"
-        android:textSize="25sp"
-        android:textStyle="bold"
+        android:overlapAnchor="false"
+        android:spinnerMode="dropdown"
         app:layout_constraintBottom_toBottomOf="@+id/etUserName"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="HardcodedText"
+        tools:targetApi="LOLLIPOP" />
+
 
     <EditText
         android:id="@+id/etUserName"
@@ -67,7 +67,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.3" />
+        app:layout_constraintVertical_bias="0.389" />
 
     <EditText
         android:id="@+id/etUserPassword"
@@ -104,8 +104,10 @@
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="@+id/btnSignIn"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/toolbar"
+        app:layout_constraintVertical_bias="0.637"
         tools:visibility="visible" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

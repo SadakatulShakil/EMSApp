@@ -1,6 +1,8 @@
 package com.example.emsapp.Activity;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
 import com.example.emsapp.MainActivity;
@@ -26,8 +28,15 @@ public class SplashScreenActivity extends AppCompatActivity {
                    ex.printStackTrace();
                }
                finally{
-                   Intent intent = new Intent(SplashScreenActivity.this, MainActivity.class);
-                   startActivity(intent);
+                   SharedPreferences preferences = getSharedPreferences("MY_APP", Context.MODE_PRIVATE);
+                   String userPgId  = preferences.getString("TOKEN",null);
+                    if(userPgId == null){
+                        Intent intent = new Intent(SplashScreenActivity.this, UserSignInActivity.class);
+                        startActivity(intent);
+                    }else {
+                        Intent intent = new Intent(SplashScreenActivity.this, UserHomePageActivity.class);
+                        startActivity(intent);
+                    }
                }
            }
 

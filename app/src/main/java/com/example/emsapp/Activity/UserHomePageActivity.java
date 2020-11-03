@@ -5,7 +5,9 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
@@ -22,9 +24,10 @@ public class UserHomePageActivity extends AppCompatActivity {
 
     private CardView profileInfo, checkInOut, movableReport,
             movementEvents, attendance, addEquipment, executionReport;
-    private TextView userOriginalName;
+    private TextView userOriginalName, btnLogOut;
     private String PgId, userRole;
     private DatabaseReference employeeReference;
+    private SharedPreferences preferences;
 
 
     @Override
@@ -37,6 +40,17 @@ public class UserHomePageActivity extends AppCompatActivity {
         ////Data came from User SignInActivity//////
         PgId = intent.getStringExtra("pgId");
         getAuthUserData();
+
+        btnLogOut.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                preferences = getSharedPreferences("MY_APP", Context.MODE_PRIVATE);
+                preferences.edit().putString("TOKEN",null).apply();
+                Intent intent1 = new Intent(UserHomePageActivity.this, UserSignInActivity.class);
+                startActivity(intent1);
+                finish();
+            }
+        });
 
     }
 
@@ -169,5 +183,6 @@ public class UserHomePageActivity extends AppCompatActivity {
         movementEvents = findViewById(R.id.movementCheckLayout);
         addEquipment = findViewById(R.id.equipmentsLayout);
         executionReport = findViewById(R.id.executionLayout);
+        btnLogOut = findViewById(R.id.logOutBt);
     }
 }
