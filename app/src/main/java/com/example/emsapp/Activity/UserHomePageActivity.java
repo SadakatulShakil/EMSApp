@@ -45,7 +45,7 @@ public class UserHomePageActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 preferences = getSharedPreferences("MY_APP", Context.MODE_PRIVATE);
-                preferences.edit().putString("TOKEN",null).apply();
+                preferences.edit().putString("loginState",null).apply();
                 Intent intent1 = new Intent(UserHomePageActivity.this, UserSignInActivity.class);
                 startActivity(intent1);
                 finish();

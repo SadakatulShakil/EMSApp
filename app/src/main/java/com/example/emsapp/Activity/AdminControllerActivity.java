@@ -66,7 +66,7 @@ public class AdminControllerActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 preferences = getSharedPreferences("MY_APP", Context.MODE_PRIVATE);
-                preferences.edit().putString("TOKEN",null).apply();
+                preferences.edit().putString("loginState",null).apply();
                 finish();
                 firebaseAuth.getInstance().signOut();
                 Intent intent = new Intent(AdminControllerActivity.this, UserSignInActivity.class);

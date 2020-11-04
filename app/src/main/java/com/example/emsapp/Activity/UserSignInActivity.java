@@ -92,7 +92,7 @@ public class UserSignInActivity extends AppCompatActivity {
                         startActivity(intent);
                         finish();
                         SharedPreferences preferences = getSharedPreferences("MY_APP", Context.MODE_PRIVATE);
-                        preferences.edit().putString("TOKEN",uName).apply();
+                        preferences.edit().putString("loginState",uName).apply();
                         Log.d(TAG, "onChildAdded: "+ uName);
                     } else {
 
@@ -112,7 +112,7 @@ public class UserSignInActivity extends AppCompatActivity {
                                         startActivity(intent);
                                         finish();
                                         SharedPreferences preferences = getSharedPreferences("MY_APP", Context.MODE_PRIVATE);
-                                        preferences.edit().putString("TOKEN",uName).apply();
+                                        preferences.edit().putString("loginState",uName).apply();
                                         Log.d(TAG, "onChildAdded: "+ uName);
                                     }
 

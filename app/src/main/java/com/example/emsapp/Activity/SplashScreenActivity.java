@@ -36,7 +36,7 @@ public class SplashScreenActivity extends AppCompatActivity {
                 }
                 finally{
                     SharedPreferences preferences = getSharedPreferences("MY_APP", Context.MODE_PRIVATE);
-                    String userName  = preferences.getString("TOKEN",null);
+                    String userName  = preferences.getString("loginState",null);
                     Log.d(TAG, "run: "+ userName);
                     if(userName == null){
                         Intent intent = new Intent(SplashScreenActivity.this, UserSignInActivity.class);
