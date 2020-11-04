@@ -6,7 +6,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ProgressBar;
@@ -38,6 +40,7 @@ public class AdminControllerActivity extends AppCompatActivity {
     private EmployeeAdapter mEmployeeAdapter;
     private DatabaseReference employeeReference;
     private ProgressBar progressBar;
+    private SharedPreferences preferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,15 +62,17 @@ public class AdminControllerActivity extends AppCompatActivity {
             }
         });
 
-       /* logOutBtn.setOnClickListener(new View.OnClickListener() {
+        logOutBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                preferences = getSharedPreferences("MY_APP", Context.MODE_PRIVATE);
+                preferences.edit().putString("TOKEN",null).apply();
                 finish();
                 firebaseAuth.getInstance().signOut();
-                Intent intent = new Intent(AdminControllerActivity.this, MainActivity.class);
+                Intent intent = new Intent(AdminControllerActivity.this, UserSignInActivity.class);
                 startActivity(intent);
             }
-        });*/
+        });
 
         getAndShowEmployeeList();
     }
@@ -114,7 +119,7 @@ public class AdminControllerActivity extends AppCompatActivity {
     private void iniItView() {
         employeeRecyclerView = findViewById(R.id.recyclerViewForEmployeeList);
         addEmployeeBtn = findViewById(R.id.addEmployeeFAB);
-      /*  logOutBtn = findViewById(R.id.logOutBtn);*/
+        logOutBtn = findViewById(R.id.logOutBt);
         progressBar = findViewById(R.id.progressBar);
 
     }

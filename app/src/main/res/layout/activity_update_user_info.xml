@@ -367,10 +367,10 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin="16dp"
-                    android:hint="user login password"
+                    android:hint="Enter password"
                     android:imeOptions="actionDone"
-                    android:inputType="text"
                     android:padding="15dp"
+                    android:inputType="text"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/startDateET" />

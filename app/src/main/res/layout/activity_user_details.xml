@@ -334,17 +334,4 @@
 
     </LinearLayout>
 
-
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/updateFAB"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="8dp"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentBottom="true"
-        android:backgroundTint="@color/colorAccent"
-        android:elevation="10dp"
-        android:src="@drawable/ic_edit"
-        tools:targetApi="lollipop" />
-
 </RelativeLayout>

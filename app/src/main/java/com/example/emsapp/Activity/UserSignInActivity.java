@@ -8,6 +8,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
@@ -48,7 +49,7 @@ public class UserSignInActivity extends AppCompatActivity {
     private String uName, uPassword;
     private ArrayList<UserRole> mUserRoleList;
     private UserRoleAdapter mUserRoleAdapter;
-    private SharedPreferences preferences;
+    public static final String TAG = "SignIn";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -90,6 +91,9 @@ public class UserSignInActivity extends AppCompatActivity {
                         Intent intent = new Intent(UserSignInActivity.this, AdminControllerActivity.class);
                         startActivity(intent);
                         finish();
+                        SharedPreferences preferences = getSharedPreferences("MY_APP", Context.MODE_PRIVATE);
+                        preferences.edit().putString("TOKEN",uName).apply();
+                        Log.d(TAG, "onChildAdded: "+ uName);
                     } else {
 
                         employeeReference = FirebaseDatabase.getInstance().getReference("Employee");
@@ -109,6 +113,7 @@ public class UserSignInActivity extends AppCompatActivity {
                                         finish();
                                         SharedPreferences preferences = getSharedPreferences("MY_APP", Context.MODE_PRIVATE);
                                         preferences.edit().putString("TOKEN",uName).apply();
+                                        Log.d(TAG, "onChildAdded: "+ uName);
                                     }
 
                                 }

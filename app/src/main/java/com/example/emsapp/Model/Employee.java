@@ -24,13 +24,57 @@ public class Employee implements Serializable {
     public Employee() {
     }
 
+    public Employee(String eId,
+                    String userName,
+                    String userEmail,
+                    String userPhone,
+                    String userNid,
+                    String userCurrentCity,
+                    String userCurrentLocation,
+                    String userVillage,
+                    String userUpazilla,
+                    String userZilla,
+                    String userDivision,
+                    String userPgId,
+                    String userDepartment,
+                    String userDesignation,
+                    String userJoiningDate,
+                    String userRole) {
+        this.eId = eId;
+        this.userName = userName;
+        this.userEmail = userEmail;
+        this.userPhone = userPhone;
+        this.userNid = userNid;
+        this.userCurrentCity = userCurrentCity;
+        this.userCurrentLocation = userCurrentLocation;
+        this.userVillage = userVillage;
+        this.userUpazilla = userUpazilla;
+        this.userZilla = userZilla;
+        this.userDivision = userDivision;
+        this.userPgId = userPgId;
+        this.userDepartment = userDepartment;
+        this.userDesignation = userDesignation;
+        this.userJoiningDate = userJoiningDate;
+        this.userRole = userRole;
+    }
 
-
-    public Employee(String eId, String userName, String userEmail, String userPhone,
-                    String userNid, String userCurrentCity, String userCurrentLocation,
-                    String userVillage, String userUpazilla, String userZilla, String userDivision,
-                    String userPgId, String userDepartment, String userDesignation,
-                    String userJoiningDate, String userPassword, String userRole) {
+    public Employee(String eId,
+                    String userName,
+                    String userEmail,
+                    String userPhone,
+                    String userNid,
+                    String userCurrentCity,
+                    String userCurrentLocation,
+                    String userVillage,
+                    String userUpazilla,
+                    String userZilla,
+                    String userDivision,
+                    String userPgId,
+                    String userDepartment,
+                    String userDesignation,
+                    String userJoiningDate,
+                    String userPassword,
+                    String userRole) {
         this.eId = eId;
         this.userName = userName;
         this.userEmail = userEmail;

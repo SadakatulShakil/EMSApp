@@ -28,7 +28,6 @@ public class UserDetailsActivity extends AppCompatActivity {
     private DatabaseReference employeeReference;
     private FirebaseAuth firebaseAuth;
     private ProgressBar progressBar;
-    private FloatingActionButton updateUserInfo;
     private Employee employee;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,14 +53,6 @@ public class UserDetailsActivity extends AppCompatActivity {
         eJoiningDate.setText("Joining Date: "+employee.getUserJoiningDate());
         eDepartment.setText("Department: "+employee.getUserDepartment());
 
-        updateUserInfo.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent1 = new Intent(UserDetailsActivity.this, UpdateUserInfoActivity.class);
-                intent1.putExtra("userInfo", employee);
-                startActivity(intent1);
-            }
-        });
     }
 
     private void inItView() {
@@ -80,7 +71,6 @@ public class UserDetailsActivity extends AppCompatActivity {
         eDesignation = findViewById(R.id.employeeDesignationEt);
         eJoiningDate = findViewById(R.id.startDateET);
         userDeleteBtn = findViewById(R.id.deleteUser);
-        updateUserInfo = findViewById(R.id.updateFAB);
         //progressBar = findViewById(R.id.progressBar);
         eDepartment = findViewById(R.id.department);
 

@@ -6,14 +6,18 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.emsapp.Adapter.EmployeeAdapter;
 import com.example.emsapp.Model.Employee;
 import com.example.emsapp.R;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -38,6 +42,8 @@ public class EmployeeDetailsActivity extends AppCompatActivity {
     private ProgressBar progressBar;
     private FloatingActionButton updateUserInfo;
     private Employee employee;
+    private DatabaseReference databaseReference;
+    public static final String TAG = "Details";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,10 +52,7 @@ public class EmployeeDetailsActivity extends AppCompatActivity {
         inItView();
         Intent intent = getIntent();
         employee = (Employee) intent.getSerializableExtra("employeeInfo");
-       /* String currentEmail = employee.getUserEmail();
-        if(!(currentEmail.equals("admin@gmail.com"))){
-            userDeleteBtn.setVisibility(View.GONE);
-        }*/
+        databaseReference =FirebaseDatabase.getInstance().getReference("Employee");
 
         eName.setText("Name: "+employee.getUserName());
         eEmail.setText("Email: "+employee.getUserEmail());
@@ -66,6 +69,32 @@ public class EmployeeDetailsActivity extends AppCompatActivity {
         eJoiningDate.setText("Joining Date: "+employee.getUserJoiningDate());
         eDepartment.setText("Department: "+employee.getUserDepartment());
 
+        userDeleteBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String userId = employee.geteId();
+                databaseReference.child(userId).removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if(task.isSuccessful()){
+                            Toast.makeText(EmployeeDetailsActivity.this, "Successfully deleted! "+ "userName: "+ employee.getUserName(), Toast.LENGTH_SHORT).show();
+                            Intent intent1 = new Intent(EmployeeDetailsActivity.this, AdminControllerActivity.class);
+                            startActivity(intent1);
+                            finish();
+                        }
+                    }
+                });
+            }
+        });
+
+        updateUserInfo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent1 = new Intent(EmployeeDetailsActivity.this, UpdateUserInfoActivity.class);
+                intent1.putExtra("userInfo", employee);
+                startActivity(intent1);
+            }
+        });
 
     }
 
