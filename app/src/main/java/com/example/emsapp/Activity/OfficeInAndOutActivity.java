@@ -16,6 +16,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -36,7 +37,9 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
@@ -44,9 +47,10 @@ public class OfficeInAndOutActivity extends AppCompatActivity {
 
     private Button startOfficeBtn, finishOfficeBtn;
     private LinearLayout startInformation, finishInformation;
-    private TextView startTime, startLocation, finishTime, finishLocation;
+    private EditText lateReasonEt;
+    private TextView startTime, startLocation, finishTime, finishLocation, demoInTime, demoOverTime, reason;
     private  String addingTimeForStart, addingTimeForFinish,
-            addingDate, addressForStart, addressForFinish,addressStart, addressFinish, monthName, setPId, getPId;
+            addingDate, addressForStart, addressForFinish,addressStart, addressFinish, monthName, setPId, getPId, lateReason;
     private FusedLocationProviderClient client;
     private Geocoder geocoder;
     private Employee employee;
@@ -62,12 +66,52 @@ public class OfficeInAndOutActivity extends AppCompatActivity {
         inItView();
         Intent intent = getIntent();
         employee = (Employee) intent.getSerializableExtra("userInfo");
+
+        ///////////Compare Office late Count Down/////
+        Calendar calendar = Calendar.getInstance();
+        SimpleDateFormat sdf = new SimpleDateFormat("hh:mm a",Locale.US);
+        String currentTime = sdf.format(calendar.getTime());
+        try {
+            Date estimatedOfficeTime = sdf.parse("09:15 AM");
+            Date checkInTime = sdf.parse(currentTime);
+
+            int diff = checkInTime.compareTo(estimatedOfficeTime);
+            Log.d(TAG, "onCreate: " + "Compare Value: "+ diff);
+
+            if(diff>0){
+                demoOverTime.setVisibility(View.VISIBLE);
+                demoInTime.setVisibility(View.GONE);
+                lateReasonEt.setVisibility(View.VISIBLE);
+            }else if(diff<0){
+                demoInTime.setVisibility(View.VISIBLE);
+                demoOverTime.setVisibility(View.GONE);
+                lateReasonEt.setVisibility(View.GONE);
+            }else if(diff == 0){
+                demoInTime.setVisibility(View.VISIBLE);
+                demoOverTime.setVisibility(View.GONE);
+                lateReasonEt.setVisibility(View.GONE);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        ///////////Compare Office late Count Down/////
         setCheckInOutData();
 
         startOfficeBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 //startInformation.setVisibility(View.VISIBLE);
+                lateReason = lateReasonEt.getText().toString().trim();
+                if (lateReason.isEmpty()) {
+                    lateReasonEt.setError("Reason is required!");
+                    lateReasonEt.requestFocus();
+                    return;
+                }
+                reason.setText(lateReason);
+                lateReasonEt.setVisibility(View.GONE);
+                demoInTime.setVisibility(View.GONE);
+                demoOverTime.setVisibility(View.GONE);
+
                 ///Current Time///
                 Calendar calendar = Calendar.getInstance();
                 SimpleDateFormat myTimeFormat = new SimpleDateFormat("hh:mm a",Locale.US);
@@ -108,7 +152,7 @@ public class OfficeInAndOutActivity extends AppCompatActivity {
                                 startLocation.setText(addressStart);
 
                                 Log.d(TAG, "onSuccessLocation : " + addressForStart);
-                                storeStartStatus(addressStart, monthName);
+                                storeStartStatus(addressStart, monthName, lateReason);
 
 
                             } catch (IOException e) {
@@ -126,8 +170,6 @@ public class OfficeInAndOutActivity extends AppCompatActivity {
                     }
                 });
                 ///current Location////
-
-
             }
         });
 
@@ -174,7 +216,7 @@ public class OfficeInAndOutActivity extends AppCompatActivity {
                                 finishLocation.setText(addressFinish);
 
                                 Log.d(TAG, "onSuccessLocation : " + addressForFinish);
-                                storeFinishStatus(addressFinish, monthName);
+                                storeFinishStatus(addressFinish, monthName, lateReason);
 
 
                             } catch (IOException e) {
@@ -191,14 +233,14 @@ public class OfficeInAndOutActivity extends AppCompatActivity {
 
                     }
                 });
-                ///current Location////
 
+                ///current Location////
             }
         });
 
     }
 
-    private void storeStartStatus(String addressStart, String monthName) {
+    private void storeStartStatus(String addressStart, String monthName, String lateReason) {
         attendanceReference = FirebaseDatabase.getInstance().getReference("Attendance")
                 .child(monthName);
 
@@ -208,6 +250,7 @@ public class OfficeInAndOutActivity extends AppCompatActivity {
                 addingDate,
                 addingTimeForStart,
                 addressStart,
+                lateReason,
                 setPId
         );
         attendanceReference.child(setPId).setValue(attendanceInfo).addOnCompleteListener(new OnCompleteListener<Void>() {
@@ -226,7 +269,7 @@ public class OfficeInAndOutActivity extends AppCompatActivity {
         });
     }
 
-    private void storeFinishStatus(String addressStart, String monthName) {
+    private void storeFinishStatus(String addressStart, String monthName, String lateReason) {
         attendanceReference = FirebaseDatabase.getInstance().getReference("Attendance")
                 .child(monthName);
 
@@ -237,6 +280,7 @@ public class OfficeInAndOutActivity extends AppCompatActivity {
                 startLocation.getText().toString().trim(),
                 addingTimeForFinish,
                 addressStart,
+                lateReason,
                 getPId
 
         );
@@ -284,6 +328,7 @@ public class OfficeInAndOutActivity extends AppCompatActivity {
                         getPId = attendance.getPushId();
                         startTime.setText(attendance.getStartTime());
                         startLocation.setText(attendance.getStartLocation());
+                        reason.setText(attendance.getMovementReason());
 
                         finishTime.setText(attendance.getFinishTime());
                         finishLocation.setText(attendance.getFinishLocation());
@@ -312,5 +357,9 @@ public class OfficeInAndOutActivity extends AppCompatActivity {
         startLocation = findViewById(R.id.startLocationTv);
         finishTime = findViewById(R.id.endTimeTv);
         finishLocation = findViewById(R.id.endLocationTv);
+        demoInTime = findViewById(R.id.inTime);
+        demoOverTime = findViewById(R.id.overTime);
+        lateReasonEt = findViewById(R.id.reasonTextEt);
+        reason = findViewById(R.id.reasonTv);
     }
 }

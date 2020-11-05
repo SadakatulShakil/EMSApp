@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">E.M.S</string>
+
+    <string name="late_message">Ops! Sorry You are Late  ❌ <br/> Please give a valid reason 🥺</string>
 </resources>

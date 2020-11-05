@@ -15,27 +15,30 @@ public class Attendance implements Serializable {
     public Attendance() {
     }
 
-    public Attendance(String pgId,
+   /* public Attendance(String pgId,
                       String date,
                       String startTime,
                       String startLocation,
-                      String pushId) {
+                      String pushId,
+                      String lateReason) {
         this.pgId = pgId;
         this.date = date;
         this.startTime = startTime;
         this.startLocation = startLocation;
         this.pushId = pushId;
-    }
+        this.lateReason = lateReason;
+    }*/
 
 
 
-    public Attendance(String pgId,
+  /*  public Attendance(String pgId,
                       String date,
                       String startTime,
                       String startLocation,
                       String finishTime,
                       String finishLocation,
-                      String pushId) {
+                      String pushId,
+                      String lateReason) {
         this.pgId = pgId;
         this.date = date;
         this.startTime = startTime;
@@ -43,7 +46,8 @@ public class Attendance implements Serializable {
         this.finishTime = finishTime;
         this.finishLocation = finishLocation;
         this.pushId = pushId;
-    }
+        this.lateReason = lateReason;
+    }*/
 
     public Attendance(String pgId,
                       String date,
@@ -140,4 +144,5 @@ public class Attendance implements Serializable {
     public void setPushId(String pushId) {
         this.pushId = pushId;
     }
+
 }
