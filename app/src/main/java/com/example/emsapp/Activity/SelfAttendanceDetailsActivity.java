@@ -10,7 +10,7 @@ import com.example.emsapp.Model.Attendance;
 import com.example.emsapp.R;
 
 public class SelfAttendanceDetailsActivity extends AppCompatActivity {
-    private TextView dateViewTv, startTimeTv, finishTimeTv, startLocationTv, finishLocationTv;
+    private TextView dateViewTv, startTimeTv, finishTimeTv, startLocationTv, finishLocationTv, lateReason;
     private Attendance attendanceInfo;
 
     @Override
@@ -27,6 +27,12 @@ public class SelfAttendanceDetailsActivity extends AppCompatActivity {
         startLocationTv.setText(attendanceInfo.getStartLocation());
         finishTimeTv.setText("Office Finish At: "+attendanceInfo.getFinishTime());
         finishLocationTv.setText(attendanceInfo.getFinishLocation());
+        String reason = attendanceInfo.getMovementReason();
+        if(reason.equals(null)){
+            lateReason.setText(getString(R.string.late_reason));
+        }else{
+            lateReason.setText(reason);
+        }
     }
 
     private void inItView() {
@@ -35,5 +41,6 @@ public class SelfAttendanceDetailsActivity extends AppCompatActivity {
         startLocationTv = findViewById(R.id.startOfficeLocationTv);
         finishTimeTv = findViewById(R.id.finishOfficeTimeTv);
         finishLocationTv = findViewById(R.id.finishOfficeLocationTv);
+        lateReason = findViewById(R.id.lateReasonTv);
     }
 }

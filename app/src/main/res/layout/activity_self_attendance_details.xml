@@ -129,6 +129,7 @@
         android:textColor="@color/black"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/finishOfficeTimeTv" />
+
     <TextView
         android:id="@+id/finishOfficeLocationTv"
         android:layout_width="wrap_content"
@@ -140,5 +141,39 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/demo2"
         tools:text="28-09-2020" />
+
+    <View
+        android:id="@+id/view3"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_margin="5dp"
+        android:background="@color/ash"
+        app:layout_constraintTop_toBottomOf="@+id/finishOfficeLocationTv" />
+
+    <TextView
+        android:id="@+id/demoReason"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Late Reason :"
+        android:layout_margin="16dp"
+        android:textStyle="bold"
+        android:textColor="@color/black"
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/view3" />
+
+    <TextView
+        android:id="@+id/lateReasonTv"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        android:text="Late Reason :"
+        android:gravity="center"
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+        android:textColor="@color/red"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/demoReason" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

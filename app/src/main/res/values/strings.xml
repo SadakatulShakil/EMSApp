@@ -2,4 +2,7 @@
     <string name="app_name">E.M.S</string>
 
     <string name="late_message">Ops! Sorry You are Late  ❌ <br/> Please give a valid reason 🥺</string>
+    <string name="inTime_message">Thank you for Coming in Time!  ✅ <br/> Please give us gratings😊</string>
+    <string name="late_reason">Attended in Time 😊</string>
+    <string name="gratings_hint">Give us gratings 😊</string>
 </resources>

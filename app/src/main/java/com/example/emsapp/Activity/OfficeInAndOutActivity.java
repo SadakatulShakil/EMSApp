@@ -72,7 +72,7 @@ public class OfficeInAndOutActivity extends AppCompatActivity {
         SimpleDateFormat sdf = new SimpleDateFormat("hh:mm a",Locale.US);
         String currentTime = sdf.format(calendar.getTime());
         try {
-            Date estimatedOfficeTime = sdf.parse("09:15 AM");
+            Date estimatedOfficeTime = sdf.parse("04:10 PM");
             Date checkInTime = sdf.parse(currentTime);
 
             int diff = checkInTime.compareTo(estimatedOfficeTime);
@@ -85,11 +85,13 @@ public class OfficeInAndOutActivity extends AppCompatActivity {
             }else if(diff<0){
                 demoInTime.setVisibility(View.VISIBLE);
                 demoOverTime.setVisibility(View.GONE);
-                lateReasonEt.setVisibility(View.GONE);
+                lateReasonEt.setVisibility(View.VISIBLE);
+                lateReasonEt.setHint(getString(R.string.gratings_hint));
             }else if(diff == 0){
                 demoInTime.setVisibility(View.VISIBLE);
                 demoOverTime.setVisibility(View.GONE);
-                lateReasonEt.setVisibility(View.GONE);
+                lateReasonEt.setVisibility(View.VISIBLE);
+                lateReasonEt.setHint(getString(R.string.gratings_hint));
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -100,6 +102,7 @@ public class OfficeInAndOutActivity extends AppCompatActivity {
         startOfficeBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Log.d(TAG, "onClick: " + "officeStartClickd");
                 //startInformation.setVisibility(View.VISIBLE);
                 lateReason = lateReasonEt.getText().toString().trim();
                 if (lateReason.isEmpty()) {
