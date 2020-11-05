@@ -21,6 +21,7 @@ import java.util.Locale;
 public class SelfAttendanceDetailsActivity extends AppCompatActivity {
     private TextView dateViewTv, startTimeTv, finishTimeTv, startLocationTv, finishLocationTv, lateReason;
     private Attendance attendanceInfo;
+    public static final String TAG = "selfAttendance";
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
@@ -45,11 +46,11 @@ public class SelfAttendanceDetailsActivity extends AppCompatActivity {
         String currentTime = sdf.format(calendar.getTime());
 
         try {
-            Date estimatedOfficeTime = sdf.parse("04:10 PM");
+            Date estimatedOfficeTime = sdf.parse("09:15 AM");
             Date checkInTime = sdf.parse(attendanceInfo.getStartTime());
 
             int diff = checkInTime.compareTo(estimatedOfficeTime);
-
+            Log.d(TAG, "onCreate: " + "Compare Value: "+ diff);
 
             if(diff>0){///late office
                 lateReason.setText(reason);

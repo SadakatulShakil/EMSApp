@@ -72,7 +72,7 @@ public class OfficeInAndOutActivity extends AppCompatActivity {
         SimpleDateFormat sdf = new SimpleDateFormat("hh:mm a",Locale.US);
         String currentTime = sdf.format(calendar.getTime());
         try {
-            Date estimatedOfficeTime = sdf.parse("04:10 PM");
+            Date estimatedOfficeTime = sdf.parse("09:15 AM");
             Date checkInTime = sdf.parse(currentTime);
 
             int diff = checkInTime.compareTo(estimatedOfficeTime);
@@ -219,7 +219,7 @@ public class OfficeInAndOutActivity extends AppCompatActivity {
                                 finishLocation.setText(addressFinish);
 
                                 Log.d(TAG, "onSuccessLocation : " + addressForFinish);
-                                storeFinishStatus(addressFinish, monthName, lateReason);
+                                storeFinishStatus(addressFinish, monthName);
 
 
                             } catch (IOException e) {
@@ -272,7 +272,7 @@ public class OfficeInAndOutActivity extends AppCompatActivity {
         });
     }
 
-    private void storeFinishStatus(String addressStart, String monthName, String lateReason) {
+    private void storeFinishStatus(String addressStart, String monthName) {
         attendanceReference = FirebaseDatabase.getInstance().getReference("Attendance")
                 .child(monthName);
 
@@ -283,7 +283,7 @@ public class OfficeInAndOutActivity extends AppCompatActivity {
                 startLocation.getText().toString().trim(),
                 addingTimeForFinish,
                 addressStart,
-                lateReason,
+                reason.getText().toString().trim(),
                 getPId
 
         );
