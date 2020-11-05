@@ -1,18 +1,28 @@
 package com.example.emsapp.Activity;
 
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.View;
 import android.widget.TextView;
 
 import com.example.emsapp.Model.Attendance;
 import com.example.emsapp.R;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Locale;
+
 public class SelfAttendanceDetailsActivity extends AppCompatActivity {
     private TextView dateViewTv, startTimeTv, finishTimeTv, startLocationTv, finishLocationTv, lateReason;
     private Attendance attendanceInfo;
 
+    @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -28,11 +38,33 @@ public class SelfAttendanceDetailsActivity extends AppCompatActivity {
         finishTimeTv.setText("Office Finish At: "+attendanceInfo.getFinishTime());
         finishLocationTv.setText(attendanceInfo.getFinishLocation());
         String reason = attendanceInfo.getMovementReason();
-        if(reason.equals(null)){
-            lateReason.setText(getString(R.string.late_reason));
-        }else{
-            lateReason.setText(reason);
+
+        ///////////Compare Office late Count Down/////
+        Calendar calendar = Calendar.getInstance();
+        SimpleDateFormat sdf = new SimpleDateFormat("hh:mm a", Locale.US);
+        String currentTime = sdf.format(calendar.getTime());
+
+        try {
+            Date estimatedOfficeTime = sdf.parse("04:10 PM");
+            Date checkInTime = sdf.parse(attendanceInfo.getStartTime());
+
+            int diff = checkInTime.compareTo(estimatedOfficeTime);
+
+
+            if(diff>0){///late office
+                lateReason.setText(reason);
+            }else if(diff<0){///in time office
+                lateReason.setText(getString(R.string.late_reason));
+                lateReason.setTextColor(getColor(R.color.green));
+            }else if(diff == 0){//in time office
+                lateReason.setText(getString(R.string.late_reason));
+                lateReason.setTextColor(getColor(R.color.green));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
+        ///////////Compare Office late Count Down/////
+
     }
 
     private void inItView() {
