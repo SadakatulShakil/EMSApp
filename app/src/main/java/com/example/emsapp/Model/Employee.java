@@ -20,6 +20,7 @@ public class Employee implements Serializable {
     private String userJoiningDate;
     private String userPassword;
     private String userRole;
+    private String userConcern;
 
     public Employee() {
     }
@@ -39,7 +40,8 @@ public class Employee implements Serializable {
                     String userDepartment,
                     String userDesignation,
                     String userJoiningDate,
-                    String userRole) {
+                    String userRole,
+                    String userConcern) {
         this.eId = eId;
         this.userName = userName;
         this.userEmail = userEmail;
@@ -56,6 +58,7 @@ public class Employee implements Serializable {
         this.userDesignation = userDesignation;
         this.userJoiningDate = userJoiningDate;
         this.userRole = userRole;
+        this.userConcern = userConcern;
     }
 
     public Employee(String eId,
@@ -74,7 +77,8 @@ public class Employee implements Serializable {
                     String userDesignation,
                     String userJoiningDate,
                     String userPassword,
-                    String userRole) {
+                    String userRole,
+                    String userConcern) {
         this.eId = eId;
         this.userName = userName;
         this.userEmail = userEmail;
@@ -92,6 +96,7 @@ public class Employee implements Serializable {
         this.userJoiningDate = userJoiningDate;
         this.userPassword = userPassword;
         this.userRole = userRole;
+        this.userConcern = userConcern;
     }
 
     public String geteId() {
@@ -229,6 +234,14 @@ public class Employee implements Serializable {
         this.userRole = userRole;
     }
 
+    public String getUserConcern() {
+        return userConcern;
+    }
+
+    public void setUserConcern(String userConcern) {
+        this.userConcern = userConcern;
+    }
+
     @Override
     public String toString() {
         return "Employee{" +
@@ -247,6 +260,9 @@ public class Employee implements Serializable {
                 ", userDepartment='" + userDepartment + '\'' +
                 ", userDesignation='" + userDesignation + '\'' +
                 ", userJoiningDate='" + userJoiningDate + '\'' +
+                ", userPassword='" + userPassword + '\'' +
+                ", userRole='" + userRole + '\'' +
+                ", userConcern='" + userConcern + '\'' +
                 '}';
     }
 }

@@ -21,7 +21,7 @@ import java.util.ArrayList;
 public class UserDetailsActivity extends AppCompatActivity {
     private TextView eName, eEmail, ePhone, eNidNo, eCurrentCity,
             eCurrentLocation, eVillage, eUpazilla, eZilla,
-            eDivision, ePgId, eDesignation, eJoiningDate, eDepartment, userDeleteBtn;
+            eDivision, ePgId, eDesignation, eJoiningDate, eDepartment, eConcern;
     private FirebaseUser user;
     private ArrayList<Employee> employeeInfoList = new ArrayList<>();
     private EmployeeAdapter mEmployeeAdapter;
@@ -52,6 +52,7 @@ public class UserDetailsActivity extends AppCompatActivity {
         eDesignation.setText("Designation: "+employee.getUserDesignation());
         eJoiningDate.setText("Joining Date: "+employee.getUserJoiningDate());
         eDepartment.setText("Department: "+employee.getUserDepartment());
+        eConcern.setText("Concern: "+employee.getUserConcern());
 
     }
 
@@ -69,8 +70,8 @@ public class UserDetailsActivity extends AppCompatActivity {
         eDivision = findViewById(R.id.employeeDivisionEt);
         ePgId = findViewById(R.id.employeePgIdEt);
         eDesignation = findViewById(R.id.employeeDesignationEt);
+        eConcern = findViewById(R.id.employeeConcernEt);
         eJoiningDate = findViewById(R.id.startDateET);
-        userDeleteBtn = findViewById(R.id.deleteUser);
         //progressBar = findViewById(R.id.progressBar);
         eDepartment = findViewById(R.id.department);
 

@@ -12,17 +12,20 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.example.emsapp.Model.Department;
+import com.example.emsapp.Model.UserConcern;
 import com.example.emsapp.R;
 
 import java.util.ArrayList;
 
-public class DepartmentAdapter extends ArrayAdapter<Department> {
-    private ArrayList<Department> departmentArrayList;
+public class UserConcernAdapter extends ArrayAdapter<UserConcern> {
+
+    private ArrayList<UserConcern> userConcernArrayList;
     private Context context;
 
-    public DepartmentAdapter(@NonNull Context context,
-                             ArrayList<Department> departmentArrayList) {
-        super(context, 0, departmentArrayList);
+
+    public UserConcernAdapter(@NonNull Context context,
+                             ArrayList<UserConcern> userConcernArrayList) {
+        super(context, 0, userConcernArrayList);
     }
 
     @NonNull
@@ -50,7 +53,7 @@ public class DepartmentAdapter extends ArrayAdapter<Department> {
         }
 
         TextView productTypeName = convertView.findViewById(R.id.departmentType);
-        Department employeeDepartment = getItem(position);
+        UserConcern employeeConcern = getItem(position);
 
         if (position == 0) {
             productTypeName.setTextColor(Color.GRAY);
@@ -58,8 +61,8 @@ public class DepartmentAdapter extends ArrayAdapter<Department> {
             productTypeName.setTextColor(Color.BLACK);
 
         }
-        if (employeeDepartment != null) {
-            productTypeName.setText(employeeDepartment.getDepartmentName());
+        if (employeeConcern != null) {
+            productTypeName.setText(employeeConcern.getUserConcern());
         }
 
         return convertView;

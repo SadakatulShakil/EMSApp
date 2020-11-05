@@ -23,9 +23,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.emsapp.Adapter.DepartmentAdapter;
+import com.example.emsapp.Adapter.UserConcernAdapter;
 import com.example.emsapp.Adapter.UserRoleAdapter;
 import com.example.emsapp.Model.Department;
 import com.example.emsapp.Model.Employee;
+import com.example.emsapp.Model.UserConcern;
 import com.example.emsapp.Model.UserRole;
 import com.example.emsapp.R;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -47,13 +49,15 @@ public class AddEmployeeActivity extends AppCompatActivity {
 
     private EditText eName, eEmail, ePhone, eNidNo, eCurrentCity, eCurrentLocation, eVillage, eUpazilla,
             eZilla, eDivision, ePgId, eDesignation, eJoiningDate, ePassword;
-    private Spinner departmentSpinner, userRoleSpinner;
-    private String currentDepartment, currentUserRole;
+    private Spinner departmentSpinner, userRoleSpinner, userConcernSpinner;
+    private String currentDepartment, currentUserRole, currentUserConcern;
     private Button registerBtn;
     private ArrayList<Department> mEmployeeDeptList;
     private DepartmentAdapter mDepartmentAdapter;
     private ArrayList<UserRole> mUserRoleList;
     private UserRoleAdapter mUserRoleAdapter;
+    private UserConcernAdapter mUserConcernAdapter;
+    private ArrayList<UserConcern> mUserConcernList;
     protected static TextView viewDate;
     private FirebaseUser user;
     private DatabaseReference employeeReference;
@@ -67,6 +71,7 @@ public class AddEmployeeActivity extends AppCompatActivity {
         setContentView(R.layout.activity_add_employee);
         inItDepartmentList();
         inItUserRoleList();
+        inItUserConcernList();
         inItView();
         final FragmentManager fm = getSupportFragmentManager();
         eJoiningDate.setOnClickListener(new View.OnClickListener() {
@@ -84,6 +89,14 @@ public class AddEmployeeActivity extends AppCompatActivity {
                 registerEmployeeData();
             }
         });
+    }
+
+    private void inItUserConcernList() {
+        mUserConcernList = new ArrayList<>();
+        mUserConcernList.add(new UserConcern("Select User Concern.."));
+        mUserConcernList.add(new UserConcern("Polock Group"));
+        mUserConcernList.add(new UserConcern("1 Touch"));
+        mUserConcernList.add(new UserConcern("Dye Mac"));
     }
 
     private void inItUserRoleList() {
@@ -131,6 +144,7 @@ public class AddEmployeeActivity extends AppCompatActivity {
                 String pgId = ePgId.getText().toString().trim();
                 String department = currentDepartment;
                 String userRole = currentUserRole;
+                String userConcern = currentUserConcern;
                 String designation = eDesignation.getText().toString().trim();
                 String joiningDate = viewDate.getText().toString().trim();
                 String password = ePassword.getText().toString().trim();
@@ -209,10 +223,11 @@ public class AddEmployeeActivity extends AppCompatActivity {
             Toast.makeText(AddEmployeeActivity.this, "please select your right Department please", Toast.LENGTH_SHORT).show();
         }else if(currentUserRole.equals("Select User Role..")){
             Toast.makeText(AddEmployeeActivity.this, "please select An User Role please", Toast.LENGTH_SHORT).show();
-        }
-        else{
+        }else if(currentUserRole.equals("Select User Concern..")){
+            Toast.makeText(AddEmployeeActivity.this, "please select An User Concern please", Toast.LENGTH_SHORT).show();
+        }else{
             storeEmployeeData(name, email, phone, nIdNo, currentCity, currentLocation, village,
-                    upazilla, zilla, division, pgId, department, designation, joiningDate, password,userRole);
+                    upazilla, zilla, division, pgId, department, designation, joiningDate, password,userRole, userConcern);
         }
         eName.setText("");
         eEmail.setText("");
@@ -234,14 +249,14 @@ public class AddEmployeeActivity extends AppCompatActivity {
                                    final String currentCity, final String currentLocation, final String village,
                                    final String upazilla, final String zilla, final String division, final String pgId,
                                    final String department, final String designation, final String joiningDate,
-                                   final String password, final String userRole) {
+                                   final String password, final String userRole, final String userConcern) {
 
 
 
                             employeeReference = FirebaseDatabase.getInstance().getReference().child("Employee").child(department);
                             String pushId = employeeReference.push().getKey();
                             Employee employee = new Employee(pushId, name, email, phone, nIdNo, currentCity, currentLocation,
-                                    village,upazilla, zilla, division, pgId, department, designation, joiningDate, password, userRole);
+                                    village,upazilla, zilla, division, pgId, department, designation, joiningDate, password, userRole, userConcern);
 
                             employeeReference.push().setValue(employee).addOnCompleteListener(new OnCompleteListener<Void>() {
                                 @Override
@@ -330,7 +345,26 @@ public class AddEmployeeActivity extends AppCompatActivity {
             }
         });
 
+        userConcernSpinner = findViewById(R.id.userConcernSpinner);
+        mUserConcernAdapter = new UserConcernAdapter(AddEmployeeActivity.this, mUserConcernList);
 
+        userConcernSpinner.setAdapter(mUserConcernAdapter);
+
+        userConcernSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                UserConcern clickedUserConcern = (UserConcern) parent.getItemAtPosition(position);
+
+                currentUserConcern = clickedUserConcern.getUserConcern();
+
+                Toast.makeText(AddEmployeeActivity.this, currentUserRole +" is selected !", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
     }
 
     //DatePickerMethods
