@@ -37,6 +37,19 @@
 
     </androidx.appcompat.widget.Toolbar>
 
+    <EditText
+        android:id="@+id/reasonTextEt"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+        android:layout_marginTop="80dp"
+        android:gravity="center"
+        android:hint="What is your reason for movement?"
+        android:textColor="@color/black"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/toolbar"
+        />
 
     <Button
         android:id="@+id/startBtn"
@@ -88,20 +101,86 @@
 
     </LinearLayout>
 
-    <EditText
-        android:id="@+id/reasonTextEt"
-        android:layout_width="match_parent"
+
+    <Button
+        android:id="@+id/reachBtn"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:text="Reach Destination"
         android:layout_margin="8dp"
-        android:layout_marginTop="80dp"
-        android:gravity="center"
-        android:hint="What is your reason for movement?"
-        android:textColor="@color/black"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/toolbar"
-        app:layout_constraintVertical_bias="0.1" />
+        app:layout_constraintTop_toBottomOf="@+id/startDetailsLayout" />
+
+    <LinearLayout
+        android:id="@+id/reachDetailsLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:layout_margin="8dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/reachBtn">
+
+        <TextView
+            android:id="@+id/reachTimeTv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:text="start time: 9.10 am"
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+            android:textColor="@color/black"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/reachLocationTv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:text="start time: 9.10 am"
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+            android:textColor="@color/black"
+            android:textStyle="bold" />
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/leaveBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Leave Destination"
+        android:layout_margin="8dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/reachDetailsLayout" />
+
+    <LinearLayout
+        android:id="@+id/leaveDetailsLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:layout_margin="8dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/leaveBtn">
+
+        <TextView
+            android:id="@+id/leaveTimeTv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:text="start time: 9.10 am"
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+            android:textColor="@color/black"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/leaveLocationTv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:text="start time: 9.10 am"
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+            android:textColor="@color/black"
+            android:textStyle="bold" />
+    </LinearLayout>
 
     <Button
         android:id="@+id/endBtn"
@@ -111,7 +190,7 @@
         android:layout_margin="8dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/startDetailsLayout" />
+        app:layout_constraintTop_toBottomOf="@+id/leaveDetailsLayout" />
 
     <LinearLayout
         android:id="@+id/endDetailsLayout"
@@ -142,6 +221,7 @@
             android:textColor="@color/black"
             android:textStyle="bold" />
     </LinearLayout>
+
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

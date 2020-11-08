@@ -11,44 +11,15 @@ public class Attendance implements Serializable {
     private String finishTime;
     private String finishLocation;
     private String movementReason;
+    private String reachDestinationTime;
+    private String destinationLocation;
+    private String leaveDestinationTime;
+    private String leavingLocation;
 
     public Attendance() {
     }
 
-   /* public Attendance(String pgId,
-                      String date,
-                      String startTime,
-                      String startLocation,
-                      String pushId,
-                      String lateReason) {
-        this.pgId = pgId;
-        this.date = date;
-        this.startTime = startTime;
-        this.startLocation = startLocation;
-        this.pushId = pushId;
-        this.lateReason = lateReason;
-    }*/
-
-
-
-  /*  public Attendance(String pgId,
-                      String date,
-                      String startTime,
-                      String startLocation,
-                      String finishTime,
-                      String finishLocation,
-                      String pushId,
-                      String lateReason) {
-        this.pgId = pgId;
-        this.date = date;
-        this.startTime = startTime;
-        this.startLocation = startLocation;
-        this.finishTime = finishTime;
-        this.finishLocation = finishLocation;
-        this.pushId = pushId;
-        this.lateReason = lateReason;
-    }*/
-
+    //////For Start Movement///////
     public Attendance(String pgId,
                       String date,
                       String startTime,
@@ -63,6 +34,49 @@ public class Attendance implements Serializable {
         this.pushId = pushId;
     }
 
+    ///////////For Reach destination////////
+    public Attendance(String pgId,
+                      String date,
+                      String startTime,
+                      String startLocation,
+                      String movementReason,
+                      String reachDestinationTime,
+                      String destinationLocation,
+                      String pushId) {
+        this.pgId = pgId;
+        this.date = date;
+        this.startTime = startTime;
+        this.startLocation = startLocation;
+        this.movementReason = movementReason;
+        this.reachDestinationTime = reachDestinationTime;
+        this.destinationLocation = destinationLocation;
+        this.pushId = pushId;
+    }
+
+    ////////For Leave Destination///////////
+    public Attendance(String pgId,
+                      String date,
+                      String startTime,
+                      String startLocation,
+                      String movementReason,
+                      String reachDestinationTime,
+                      String destinationLocation,
+                      String leaveDestinationTime,
+                      String leavingLocation,
+                      String pushId) {
+        this.pgId = pgId;
+        this.date = date;
+        this.startTime = startTime;
+        this.startLocation = startLocation;
+        this.movementReason = movementReason;
+        this.reachDestinationTime = reachDestinationTime;
+        this.destinationLocation = destinationLocation;
+        this.leaveDestinationTime = leaveDestinationTime;
+        this.leavingLocation = leavingLocation;
+        this.pushId = pushId;
+    }
+
+    //////For Finish Movement/////////
     public Attendance(String pgId,
                       String date,
                       String startTime,
@@ -70,6 +84,10 @@ public class Attendance implements Serializable {
                       String finishTime,
                       String finishLocation,
                       String movementReason,
+                      String reachDestinationTime,
+                      String destinationLocation,
+                      String leaveDestinationTime,
+                      String leavingLocation,
                       String pushId) {
         this.pgId = pgId;
         this.date = date;
@@ -78,6 +96,10 @@ public class Attendance implements Serializable {
         this.finishTime = finishTime;
         this.finishLocation = finishLocation;
         this.movementReason = movementReason;
+        this.reachDestinationTime = reachDestinationTime;
+        this.destinationLocation = destinationLocation;
+        this.leaveDestinationTime = leaveDestinationTime;
+        this.leavingLocation = leavingLocation;
         this.pushId = pushId;
     }
 
@@ -145,4 +167,35 @@ public class Attendance implements Serializable {
         this.pushId = pushId;
     }
 
+    public String getReachDestinationTime() {
+        return reachDestinationTime;
+    }
+
+    public void setReachDestinationTime(String reachDestinationTime) {
+        this.reachDestinationTime = reachDestinationTime;
+    }
+
+    public String getDestinationLocation() {
+        return destinationLocation;
+    }
+
+    public void setDestinationLocation(String destinationLocation) {
+        this.destinationLocation = destinationLocation;
+    }
+
+    public String getLeaveDestinationTime() {
+        return leaveDestinationTime;
+    }
+
+    public void setLeaveDestinationTime(String leaveDestinationTime) {
+        this.leaveDestinationTime = leaveDestinationTime;
+    }
+
+    public String getLeavingLocation() {
+        return leavingLocation;
+    }
+
+    public void setLeavingLocation(String leavingLocation) {
+        this.leavingLocation = leavingLocation;
+    }
 }

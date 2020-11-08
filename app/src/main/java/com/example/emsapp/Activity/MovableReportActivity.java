@@ -43,18 +43,20 @@ import java.util.Locale;
 
 public class MovableReportActivity extends AppCompatActivity {
     private EditText reasonTextEt;
-    private Button startOffice, finishOffice;
-    private LinearLayout startInformation, finishInformation;
-    private TextView startTime, startLocation, finishTime, finishLocation, reason;
-    private  String addingTimeForStart, addingTimeForFinish,
-            addingDate, addressForStart, addressForFinish,addressStart, addressFinish, monthName, moveReason,setPId, getPId;
+    private Button startOffice, reachDestination, leaveDestination, finishOffice;
+    private LinearLayout startInformation, finishInformation, reachInformation, leaveInformation;
+    private TextView startTime, startLocation, reachTime, reachLocation, leaveTime, leaveLocation,
+            finishTime, finishLocation, reason;
+    private String addingTimeForStart, addingTimeForFinish,
+            addingDate, addressStart, timeForReach, addressDestination, addressLeavingDestination, timeForLeave, addressFinish, monthName, moveReason, setPId, getPId;
     private FusedLocationProviderClient client;
     private Geocoder geocoder;
     private Employee employee;
     private List<Address> addresses;
-    public static final String TAG =  "InOut";
+    public static final String TAG = "InOut";
     private DatabaseReference movableReportReference;
     private String userRole, currentMonthName;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -68,7 +70,8 @@ public class MovableReportActivity extends AppCompatActivity {
         startOffice.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //startInformation.setVisibility(View.VISIBLE);
+                /*startInformation.setVisibility(View.VISIBLE);
+                reachDestination.setVisibility(View.VISIBLE);*/
                 moveReason = reasonTextEt.getText().toString().trim();
                 if (moveReason.isEmpty()) {
                     reasonTextEt.setError("Reason is required!");
@@ -81,19 +84,19 @@ public class MovableReportActivity extends AppCompatActivity {
                 Calendar calendar = Calendar.getInstance();
                 SimpleDateFormat myTimeFormat = new SimpleDateFormat("hh:mm a", Locale.US);
                 addingTimeForStart = myTimeFormat.format(calendar.getTime());
-                SimpleDateFormat myDateFormat = new SimpleDateFormat("dd-MM-yyyy",Locale.US);
+                SimpleDateFormat myDateFormat = new SimpleDateFormat("dd-MM-yyyy", Locale.US);
                 addingDate = myDateFormat.format(calendar.getTime());
                 startTime.setText(addingTimeForStart);
                 ///Current Time//////
                 final String monthName = calendar.getDisplayName(Calendar.MONTH, Calendar.LONG, Locale.US);
                 Log.d(TAG, "onClick: " + monthName);
                 ///current Location////
-                geocoder= new Geocoder(MovableReportActivity.this, Locale.getDefault());
+                geocoder = new Geocoder(MovableReportActivity.this, Locale.getDefault());
                 client = LocationServices.getFusedLocationProviderClient(MovableReportActivity.this);
                 requestPermission();
 
-                if(ActivityCompat.checkSelfPermission(MovableReportActivity.this, Manifest.permission.ACCESS_FINE_LOCATION)
-                        != PackageManager.PERMISSION_GRANTED){
+                if (ActivityCompat.checkSelfPermission(MovableReportActivity.this, Manifest.permission.ACCESS_FINE_LOCATION)
+                        != PackageManager.PERMISSION_GRANTED) {
                     return;
                 }
 
@@ -101,22 +104,21 @@ public class MovableReportActivity extends AppCompatActivity {
                     @Override
                     public void onSuccess(Location location) {
 
-                        if(location != null)
-                        {
+                        if (location != null) {
 
 
                             //txtLocation.setText(location.toString());
                             Double lat = location.getLatitude();
-                            Double  lng = location.getLongitude();
+                            Double lng = location.getLongitude();
 
                             try {
-                                addresses = geocoder.getFromLocation(lat,lng,1);
+                                addresses = geocoder.getFromLocation(lat, lng, 1);
 
                                 addressStart = addresses.get(0).getAddressLine(0);
 
                                 startLocation.setText(addressStart);
 
-                                Log.d(TAG, "onSuccessLocation : " + addressForStart);
+                                Log.d(TAG, "onSuccessLocation : " + addressStart);
                                 storeStartMoveStatus(addressStart, monthName, moveReason);
 
 
@@ -125,9 +127,7 @@ public class MovableReportActivity extends AppCompatActivity {
                             }
 
 
-                        }
-                        else
-                        {
+                        } else {
 
                             startLocation.setText("Couldn't find !");
                         }
@@ -136,6 +136,150 @@ public class MovableReportActivity extends AppCompatActivity {
                 });
                 ///current Location////
 
+            }
+        });
+
+        reachDestination.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+               /* startInformation.setVisibility(View.VISIBLE);
+                reachDestination.setVisibility(View.VISIBLE);
+                moveReason = reasonTextEt.getText().toString().trim();
+                if (moveReason.isEmpty()) {
+                    reasonTextEt.setError("Reason is required!");
+                    reasonTextEt.requestFocus();
+                    return;
+                }
+                reason.setText(moveReason);
+                reasonTextEt.setText("");*/
+                ///Current Time///
+                Calendar calendar = Calendar.getInstance();
+                SimpleDateFormat myTimeFormat = new SimpleDateFormat("hh:mm a", Locale.US);
+                timeForReach = myTimeFormat.format(calendar.getTime());
+                SimpleDateFormat myDateFormat = new SimpleDateFormat("dd-MM-yyyy", Locale.US);
+                addingDate = myDateFormat.format(calendar.getTime());
+                reachTime.setText(timeForReach);
+                ///Current Time//////
+                final String monthName = calendar.getDisplayName(Calendar.MONTH, Calendar.LONG, Locale.US);
+                Log.d(TAG, "onClick: " + monthName);
+                ///current Location////
+                geocoder = new Geocoder(MovableReportActivity.this, Locale.getDefault());
+                client = LocationServices.getFusedLocationProviderClient(MovableReportActivity.this);
+                requestPermission();
+
+                if (ActivityCompat.checkSelfPermission(MovableReportActivity.this, Manifest.permission.ACCESS_FINE_LOCATION)
+                        != PackageManager.PERMISSION_GRANTED) {
+                    return;
+                }
+
+                client.getLastLocation().addOnSuccessListener((Activity) MovableReportActivity.this, new OnSuccessListener<Location>() {
+                    @Override
+                    public void onSuccess(Location location) {
+
+                        if (location != null) {
+
+
+                            //txtLocation.setText(location.toString());
+                            Double lat = location.getLatitude();
+                            Double lng = location.getLongitude();
+
+                            try {
+                                addresses = geocoder.getFromLocation(lat, lng, 1);
+
+                                addressDestination = addresses.get(0).getAddressLine(0);
+
+                                reachLocation.setText(addressStart);
+
+                                Log.d(TAG, "onSuccessLocation : " + addressDestination);
+                                storeReachDestinationStatus(addressDestination, monthName);
+
+
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+
+
+                        } else {
+
+                            reachLocation.setText("Couldn't find !");
+                        }
+
+                    }
+                });
+                ///current Location////
+
+            }
+        });
+
+
+        leaveDestination.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+               /* startInformation.setVisibility(View.VISIBLE);
+                reachDestination.setVisibility(View.VISIBLE);
+                moveReason = reasonTextEt.getText().toString().trim();
+                if (moveReason.isEmpty()) {
+                    reasonTextEt.setError("Reason is required!");
+                    reasonTextEt.requestFocus();
+                    return;
+                }
+                reason.setText(moveReason);
+                reasonTextEt.setText("");*/
+                ///Current Time///
+                Calendar calendar = Calendar.getInstance();
+                SimpleDateFormat myTimeFormat = new SimpleDateFormat("hh:mm a", Locale.US);
+                timeForLeave = myTimeFormat.format(calendar.getTime());
+                SimpleDateFormat myDateFormat = new SimpleDateFormat("dd-MM-yyyy", Locale.US);
+                addingDate = myDateFormat.format(calendar.getTime());
+                leaveTime.setText(timeForLeave);
+                ///Current Time//////
+                final String monthName = calendar.getDisplayName(Calendar.MONTH, Calendar.LONG, Locale.US);
+                Log.d(TAG, "onClick: " + monthName);
+                ///current Location////
+                geocoder = new Geocoder(MovableReportActivity.this, Locale.getDefault());
+                client = LocationServices.getFusedLocationProviderClient(MovableReportActivity.this);
+                requestPermission();
+
+                if (ActivityCompat.checkSelfPermission(MovableReportActivity.this, Manifest.permission.ACCESS_FINE_LOCATION)
+                        != PackageManager.PERMISSION_GRANTED) {
+                    return;
+                }
+
+                client.getLastLocation().addOnSuccessListener((Activity) MovableReportActivity.this, new OnSuccessListener<Location>() {
+                    @Override
+                    public void onSuccess(Location location) {
+
+                        if (location != null) {
+
+
+                            //txtLocation.setText(location.toString());
+                            Double lat = location.getLatitude();
+                            Double lng = location.getLongitude();
+
+                            try {
+                                addresses = geocoder.getFromLocation(lat, lng, 1);
+
+                                addressLeavingDestination = addresses.get(0).getAddressLine(0);
+
+                                leaveLocation.setText(addressLeavingDestination);
+
+                                Log.d(TAG, "onSuccessLocation : " + addressLeavingDestination);
+                                storeLeaveDestinationStatus(addressLeavingDestination, monthName);
+
+
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+
+
+                        } else {
+
+                            reachLocation.setText("Couldn't find !");
+                        }
+
+                    }
+                });
+                ///current Location////
 
             }
         });
@@ -146,20 +290,20 @@ public class MovableReportActivity extends AppCompatActivity {
                 //finishInformation.setVisibility(View.VISIBLE);
                 ///Current Time///
                 Calendar calendar = Calendar.getInstance();
-                SimpleDateFormat myTimeFormat = new SimpleDateFormat("hh:mm a",Locale.US);
+                SimpleDateFormat myTimeFormat = new SimpleDateFormat("hh:mm a", Locale.US);
                 addingTimeForFinish = myTimeFormat.format(calendar.getTime());
-                SimpleDateFormat myDateFormat = new SimpleDateFormat("dd-MM-yyyy",Locale.US);
+                SimpleDateFormat myDateFormat = new SimpleDateFormat("dd-MM-yyyy", Locale.US);
                 addingDate = myDateFormat.format(calendar.getTime());
                 finishTime.setText(addingTimeForFinish);
                 ///Current Time//////
                 monthName = calendar.getDisplayName(Calendar.MONTH, Calendar.LONG, Locale.US);
                 ///current Location////
-                geocoder= new Geocoder(MovableReportActivity.this, Locale.getDefault());
+                geocoder = new Geocoder(MovableReportActivity.this, Locale.getDefault());
                 client = LocationServices.getFusedLocationProviderClient(MovableReportActivity.this);
                 requestPermission();
 
-                if(ActivityCompat.checkSelfPermission(MovableReportActivity.this, Manifest.permission.ACCESS_FINE_LOCATION)
-                        != PackageManager.PERMISSION_GRANTED){
+                if (ActivityCompat.checkSelfPermission(MovableReportActivity.this, Manifest.permission.ACCESS_FINE_LOCATION)
+                        != PackageManager.PERMISSION_GRANTED) {
                     return;
                 }
 
@@ -167,22 +311,21 @@ public class MovableReportActivity extends AppCompatActivity {
                     @Override
                     public void onSuccess(Location location) {
 
-                        if(location != null)
-                        {
+                        if (location != null) {
 
 
                             //txtLocation.setText(location.toString());
                             Double lat = location.getLatitude();
-                            Double  lng = location.getLongitude();
+                            Double lng = location.getLongitude();
 
                             try {
-                                addresses = geocoder.getFromLocation(lat,lng,1);
+                                addresses = geocoder.getFromLocation(lat, lng, 1);
 
                                 addressFinish = addresses.get(0).getAddressLine(0);
 
                                 finishLocation.setText(addressFinish);
 
-                                Log.d(TAG, "onSuccessLocation : " + addressForFinish);
+                                Log.d(TAG, "onSuccessLocation : " + addressFinish);
                                 storeFinishMoveStatus(addressFinish, monthName);
 
 
@@ -191,9 +334,7 @@ public class MovableReportActivity extends AppCompatActivity {
                             }
 
 
-                        }
-                        else
-                        {
+                        } else {
 
                             finishLocation.setText("Couldn't find !");
                         }
@@ -206,6 +347,7 @@ public class MovableReportActivity extends AppCompatActivity {
         });
     }
 
+    ////////////////////start movement////////////////////
     private void storeStartMoveStatus(String addressStart, String monthName, String moveReason) {
         movableReportReference = FirebaseDatabase.getInstance().getReference("MovableReport")
                 .child(monthName);
@@ -222,11 +364,10 @@ public class MovableReportActivity extends AppCompatActivity {
         movableReportReference.child(setPId).setValue(movableInfo).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
-                if(task.isSuccessful()){
+                if (task.isSuccessful()) {
                     startTime.setClickable(false);
-                    Toast.makeText(MovableReportActivity.this, "Your Office Start Information Updated !", Toast.LENGTH_SHORT).show();
-                }
-                else{
+                    Toast.makeText(MovableReportActivity.this, "Your Movement Start Information Updated !", Toast.LENGTH_SHORT).show();
+                } else {
                     startTime.setClickable(true);
                     Toast.makeText(MovableReportActivity.this, task.getException().getMessage(), Toast.LENGTH_LONG).show();
                 }
@@ -235,7 +376,73 @@ public class MovableReportActivity extends AppCompatActivity {
         });
     }
 
-    private void storeFinishMoveStatus(String addressStart, String monthName) {
+    //////////////reach Destination////////////////////
+    private void storeReachDestinationStatus(String addressDestination, String monthName) {
+        movableReportReference = FirebaseDatabase.getInstance().getReference("MovableReport")
+                .child(monthName);
+
+        setPId = movableReportReference.push().getKey();
+        Attendance movableInfo = new Attendance(
+                employee.getUserPgId(),
+                addingDate,
+                startTime.getText().toString().trim(),
+                startLocation.getText().toString().trim(),
+                reason.getText().toString().trim(),
+                timeForReach,
+                addressDestination,
+                getPId
+        );
+        movableReportReference.child(getPId).setValue(movableInfo).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                if (task.isSuccessful()) {
+                    startTime.setClickable(false);
+                    Toast.makeText(MovableReportActivity.this, "Your destination reaching Information Updated !", Toast.LENGTH_SHORT).show();
+                } else {
+                    startTime.setClickable(true);
+                    Toast.makeText(MovableReportActivity.this, task.getException().getMessage(), Toast.LENGTH_LONG).show();
+                }
+
+            }
+        });
+
+    }
+
+    ////////////////////Leave Destination//////////////
+    private void storeLeaveDestinationStatus(String addressLeavingDestination, String monthName) {
+        movableReportReference = FirebaseDatabase.getInstance().getReference("MovableReport")
+                .child(monthName);
+
+        setPId = movableReportReference.push().getKey();
+        Attendance movableInfo = new Attendance(
+                employee.getUserPgId(),
+                addingDate,
+                startTime.getText().toString().trim(),
+                startLocation.getText().toString().trim(),
+                reason.getText().toString().trim(),
+                reachTime.getText().toString().trim(),
+                reachLocation.getText().toString().trim(),
+                timeForLeave,
+                addressLeavingDestination,
+                getPId
+        );
+        movableReportReference.child(getPId).setValue(movableInfo).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                if (task.isSuccessful()) {
+                    startTime.setClickable(false);
+                    Toast.makeText(MovableReportActivity.this, "Your destination reaching Information Updated !", Toast.LENGTH_SHORT).show();
+                } else {
+                    startTime.setClickable(true);
+                    Toast.makeText(MovableReportActivity.this, task.getException().getMessage(), Toast.LENGTH_LONG).show();
+                }
+
+            }
+        });
+    }
+
+    //////////////Finish movement////////////////////
+    private void storeFinishMoveStatus(String addressFinish, String monthName) {
         movableReportReference = FirebaseDatabase.getInstance().getReference("MovableReport")
                 .child(monthName);
 
@@ -245,19 +452,22 @@ public class MovableReportActivity extends AppCompatActivity {
                 startTime.getText().toString().trim(),
                 startLocation.getText().toString().trim(),
                 addingTimeForFinish,
-                addressStart,
+                addressFinish,
                 reason.getText().toString().trim(),
+                reachTime.getText().toString().trim(),
+                reachLocation.getText().toString().trim(),
+                leaveTime.getText().toString().trim(),
+                leaveLocation.getText().toString().trim(),
                 getPId
         );
 
         movableReportReference.child(getPId).setValue(movableInfo).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
-                if(task.isSuccessful()){
+                if (task.isSuccessful()) {
                     finishTime.setClickable(false);
-                    Toast.makeText(MovableReportActivity.this, "Your Office Finishing Information Updated !", Toast.LENGTH_SHORT).show();
-                }
-                else{
+                    Toast.makeText(MovableReportActivity.this, "Your Movement Finishing Information Updated !", Toast.LENGTH_SHORT).show();
+                } else {
                     finishTime.setClickable(false);
                     Toast.makeText(MovableReportActivity.this, task.getException().getMessage(), Toast.LENGTH_LONG).show();
                 }
@@ -269,13 +479,13 @@ public class MovableReportActivity extends AppCompatActivity {
 
     private void requestPermission() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION},1);
+            requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
         }
     }
 
     private void setCheckInOutData() {
         Calendar calendar = Calendar.getInstance();
-        SimpleDateFormat myDateFormat = new SimpleDateFormat("dd-MM-yyyy",Locale.US);
+        SimpleDateFormat myDateFormat = new SimpleDateFormat("dd-MM-yyyy", Locale.US);
         final String currentDate = myDateFormat.format(calendar.getTime());
         currentMonthName = calendar.getDisplayName(Calendar.MONTH, Calendar.LONG, Locale.US);
         movableReportReference = FirebaseDatabase.
@@ -294,7 +504,10 @@ public class MovableReportActivity extends AppCompatActivity {
                         startTime.setText(attendance.getStartTime());
                         startLocation.setText(attendance.getStartLocation());
                         reason.setText(attendance.getMovementReason());
-
+                        reachTime.setText(attendance.getReachDestinationTime());
+                        reachLocation.setText(attendance.getDestinationLocation());
+                        leaveTime.setText(attendance.getLeaveDestinationTime());
+                        leaveLocation.setText(attendance.getLeavingLocation());
                         finishTime.setText(attendance.getFinishTime());
                         finishLocation.setText(attendance.getFinishLocation());
                         //Log.d(TAG, "onChildAdded: " + mAttendanceArrayList.size());
@@ -312,7 +525,6 @@ public class MovableReportActivity extends AppCompatActivity {
     }
 
 
-
     private void inItView() {
 
         startOffice = findViewById(R.id.startBtn);
@@ -325,5 +537,13 @@ public class MovableReportActivity extends AppCompatActivity {
         finishLocation = findViewById(R.id.endLocationTv);
         reasonTextEt = findViewById(R.id.reasonTextEt);
         reason = findViewById(R.id.reasonTv);
+        reachDestination = findViewById(R.id.reachBtn);
+        reachInformation = findViewById(R.id.reachDetailsLayout);
+        leaveDestination = findViewById(R.id.leaveBtn);
+        leaveInformation = findViewById(R.id.leaveDetailsLayout);
+        reachTime = findViewById(R.id.reachTimeTv);
+        reachLocation = findViewById(R.id.reachLocationTv);
+        leaveTime = findViewById(R.id.leaveTimeTv);
+        leaveLocation = findViewById(R.id.leaveLocationTv);
     }
 }
